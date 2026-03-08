@@ -1,8 +1,10 @@
 <script lang="ts">
     import "leaflet/dist/leaflet.css";
 
-    import Map from "./lib/map/map.svelte.js";
+    import Map from "./lib/map/Map.svelte";
+    import SearchBar from "./lib/schedule/presentation/SearchBar.svelte";
 </script>
-<main class="h-svh w-svw">
+<main class="h-svh w-svw relative">
     <Map/>
+    <SearchBar/>
 </main>
