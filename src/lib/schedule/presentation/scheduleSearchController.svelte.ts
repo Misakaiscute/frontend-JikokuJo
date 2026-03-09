@@ -45,6 +45,7 @@ export default class ScheduleSearchController {
     public filteredQueryables: Queryable[] = $state([]);
     public selectedQueryable: Queryable | null = $state(null);
     public date: Date = $state(new Date(Date.now()));
+    public dropdownShown: boolean = $state(true);
 
     public async fetchQueryables(): Promise<void> {
         const queryablesFetched: boolean = this.queryablesRepository.queryables !== null;

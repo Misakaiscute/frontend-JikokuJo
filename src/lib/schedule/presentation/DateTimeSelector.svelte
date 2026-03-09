@@ -9,13 +9,13 @@
             Indulás:
         </p>
     </div>
-    <div class="h-[90%] m-0.5 flex-[2_0_auto] flex items-center rounded-sm bg-white hover:cursor-pointer">
-        <button aria-label="date picker" class="w-full h-auto text-center rounded-sm outline-none" onclick="{() => {}}">
+    <div class="h-[90%] m-0.5 flex-[2_0_auto] flex items-center rounded-sm bg-white">
+        <button aria-label="date picker" class="w-full h-auto text-center rounded-sm outline-none hover:cursor-pointer" onclick="{() => {}}">
             {scheduleSearchController.date.toLocaleDateString('hu-HU')}
         </button>
     </div>
-    <div class="h-[90%] m-0.5 flex-[1_0_auto] flex items-center self-center rounded-sm bg-white hover:cursor-pointer">
-        <button aria-label="time picker" class="w-full h-auto text-center rounded-sm outline-none" onclick="{() => {}}">
+    <div class="h-[90%] m-0.5 flex-[1_0_auto] flex items-center self-center rounded-sm bg-white">
+        <button aria-label="time picker" class="w-full h-auto text-center rounded-sm outline-none hover:cursor-pointer" onclick="{() => {}}">
             {scheduleSearchController.date.toLocaleTimeString('hu-HU', {hour: "2-digit", minute: "2-digit"})}
         </button>
     </div>
