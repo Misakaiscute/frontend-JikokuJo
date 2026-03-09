@@ -8,4 +8,4 @@
         const map = new Map(mapElement);
     });
 </script>
-<div bind:this={mapElement} class="h-svh w-svw top-0 left-0"></div>
+<div bind:this={mapElement} class="z-0 h-svh w-svw top-0 left-0"></div>

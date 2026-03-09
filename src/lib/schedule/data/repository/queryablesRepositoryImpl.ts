@@ -1,5 +1,5 @@
 import type QueryablesRepository from "./queryablesRepository.ts";
-import type {Queryable} from "../model/queryable.ts";
+import type {Queryable, Route, Stop} from "../model/queryable.ts";
 import Api from "../../../core/data/remote/api.ts";
 import type {RootResponse} from "../../../core/data/remote/apiResponseStructure.ts";
 import type {GetQueryablesObj} from "../remote/apiResponseStructure.ts";
@@ -11,32 +11,32 @@ export default class QueryablesRepositoryImpl implements QueryablesRepository {
     public queryables: ApiResult<Queryable[] | null> | null = null;
 
     async getQueryables(): Promise<void> {
-        try {
-            const response = await fetch(this.url);
-            const body = await response.json() as RootResponse<GetQueryablesObj>;
-            if (!response.ok) {
-                this.queryables = {
-                    kind: "reject",
-                    data: null,
-                    errors: body.errors
-                }
-            } else {
-                const fetchedQueryables: Queryable[] = [];
-                fetchedQueryables.push(...body.data.stops);
-                fetchedQueryables.push(...body.data.routes);
-
-                this.queryables = {
-                    kind: "fulfill",
-                    data: fetchedQueryables,
-                    errors: []
-                }
-            }
-        } catch {
+        const response = await fetch(this.url);
+        const body = await response.json() as RootResponse<GetQueryablesObj>;
+        if (!response.ok) {
             this.queryables = {
                 kind: "reject",
                 data: null,
-                errors: ["Valami hiba történt."]
+                errors: body.errors
             }
+            throw this.queryables.errors ? this.queryables.errors[0] : "Valami hiba történt.";
+        } else {
+            const fetchedQueryables: Queryable[] = [];
+            fetchedQueryables.push(...(body.data.stops).map((it): Stop => ({
+                ...it,
+                kind: "stop",
+            })));
+            fetchedQueryables.push(...body.data.routes.map((it): Route => ({
+                ...it,
+                kind: "route"
+            })));
+
+            this.queryables = {
+                kind: "fulfill",
+                data: fetchedQueryables,
+                errors: []
+            }
+            return;
         }
     }
 }

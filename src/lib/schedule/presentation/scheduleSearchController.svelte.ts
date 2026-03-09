@@ -5,33 +5,58 @@ import QueryablesRepositoryImpl from "../data/repository/queryablesRepositoryImp
 
 export default class ScheduleSearchController {
     private queryablesRepository: QueryablesRepository;
+    constructor(queryablesRepository: QueryablesRepository) {
+        this.queryablesRepository = queryablesRepository;
+    }
 
-    public searchString: string = $state("");
-    public filteredQueryables: Queryable[] = $derived.by(() => {
+    private _searchString: string = $state("");
+        get searchString(): string {
+            return this._searchString;
+        }
+        set searchString(value: string) {
+            this._searchString = value;
+            if (this.searchDebounce !== undefined) {
+                clearTimeout(this.searchDebounce);
+            }
+            this.searchDebounce = setTimeout(() => {
+                this.filteredQueryables = this.debounceHandler()
+            }, 1000);
+        }
+        
+    private searchDebounce: ReturnType<typeof setTimeout> | undefined = undefined;
+    private debounceHandler = (): Queryable[] => {
         if (this.queryablesRepository.queryables === null) {
             throw new Error("Queryables may not be null at this point found.");
         }
-        if (this.searchString === ""){
+        if (this._searchString === ""){
             return [];
         }
         if (this.queryablesRepository.queryables.kind === "fulfill") {
             return this.queryablesRepository.queryables.data!!.filter((it: Queryable) => {
                 if (it.kind === "stop"){
-                    return (it as Stop).name.toLowerCase().includes(this.searchString.toLowerCase());
+                    return (it as Stop).name.toLowerCase().includes(this._searchString.toLowerCase());
                 } else if (it.kind === "route"){
-                    return (it as Route).route_short_name.toLowerCase().includes(this.searchString.toLowerCase());
+                    return (it as Route).route_short_name.toLowerCase().includes(this._searchString.toLowerCase());
                 }
             });
         } else return [];
-    });
-    public error: Error | null = $state(null);
-
-    constructor(queryablesRepository: QueryablesRepository) {
-        this.queryablesRepository = queryablesRepository;
     }
+    public filteredQueryables: Queryable[] = $state([]);
+    public selectedQueryable: Queryable | null = $state(null);
+    public date: Date = $state(new Date(Date.now()));
 
-    public fetchQueryables = (): void => {
-        this.queryablesRepository.getQueryables()
+    public async fetchQueryables(): Promise<void> {
+        const queryablesFetched: boolean = this.queryablesRepository.queryables !== null;
+        if (queryablesFetched) {
+            const queryablesAvailable: boolean = this.queryablesRepository.queryables!!.kind === "fulfill";
+            if (queryablesAvailable) {
+                return;
+            } else {
+                return this.queryablesRepository.getQueryables();
+            }
+        } else {
+            return this.queryablesRepository.getQueryables();
+        }
     }
 
     public static KEY: symbol = Symbol("SCHEDULE_SEARCH_KEY");
