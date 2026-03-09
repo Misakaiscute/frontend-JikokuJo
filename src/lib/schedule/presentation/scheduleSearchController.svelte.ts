@@ -15,12 +15,13 @@ export default class ScheduleSearchController {
         }
         set searchString(value: string) {
             this._searchString = value;
+            this.selectedQueryable = null;
             if (this.searchDebounce !== undefined) {
                 clearTimeout(this.searchDebounce);
             }
             this.searchDebounce = setTimeout(() => {
                 this.filteredQueryables = this.debounceHandler()
-            }, 1000);
+            }, 500);
         }
         
     private searchDebounce: ReturnType<typeof setTimeout> | undefined = undefined;

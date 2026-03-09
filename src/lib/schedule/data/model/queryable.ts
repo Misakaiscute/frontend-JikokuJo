@@ -9,7 +9,7 @@ export type Route = {
     route_id: string,
     route_short_name: string,
     type: number,
-    color: string,
+    color: string | null,
 }
 
 export type Queryable = Stop | Route
