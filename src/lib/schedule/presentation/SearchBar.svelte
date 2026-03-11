@@ -16,13 +16,14 @@
             class="flex-[1_0_auto] bg-transparent py-4 pl-2 text-sm text-zinc-800 placeholder-zinc-400 outline-none"
             type="text"
             placeholder="Megálló / járat"
+            autocomplete="off"
             bind:value={scheduleSearchController.searchString}
         />
         {#if trailingActionSearch}
             <button
                 aria-label="search-button"
                 class="mr-2 h-[70%] flex-none text-zinc-400 hover:transition-colors duration-200 hover:cursor-pointer hover:text-zinc-600"
-                onclick="{() => {}}">
+                onclick="{() => { scheduleSearchController.searchTrips(); }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="aspect-1/1 h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="7" />
                     <path d="M21 21l-4.35-4.35" />
@@ -32,7 +33,10 @@
             <button
                 aria-label="search-button"
                 class="mr-2 h-[70%] flex-none text-zinc-400 hover:transition-colors duration-200 hover:cursor-pointer hover:text-zinc-600"
-                onclick="{() => {scheduleSearchController.searchString = ''}}">
+                onclick="{() => {
+                    scheduleSearchController.searchString = '';
+                    scheduleSearchController.dropdownShown = false;
+                }}">
                 <svg xmlns="http://www.w3.org/2000/svg" class="aspect-1/1 h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6l-1 14H6L5 6" />

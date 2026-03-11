@@ -10,7 +10,11 @@
         <button
             aria-label="{queryable.name}"
             class="h-full w-full px-2 flex items-center justify-start truncate transition-all duration-300 hover:cursor-pointer hover:shadow-sm/20"
-            onclick="{() => {scheduleSearchController.selectedQueryable = queryable}}"
+            onclick="{() => {
+                scheduleSearchController.selectedQueryable = queryable;
+                scheduleSearchController.searchString = queryable.name;
+                scheduleSearchController.dropdownShown = false;
+            }}"
         >{queryable.name}</button>
     </div>
 {:else if queryable.kind === "route"}
@@ -19,7 +23,11 @@
          <button
              aria-label="{queryable.route_short_name}"
              class="h-full w-full px-2 flex items-center justify-start truncate transition-all duration-300 hover:cursor-pointer hover:shadow-sm/20"
-             onclick="{() => {scheduleSearchController.selectedQueryable = queryable}}"
+             onclick="{() => {
+                 scheduleSearchController.searchString = queryable.route_short_name;
+                 scheduleSearchController.selectedQueryable = queryable;
+                 scheduleSearchController.dropdownShown = false;
+             }}"
          >{queryable.route_short_name}</button>
     </div>
 {/if}

@@ -1,4 +1,9 @@
 export type Location = {
-    latitude: number,
-    longitude: number,
+    lat: number,
+    lon: number,
+}
+
+export type RoutePathPoint = {
+    distance_traveled: number,
+    location: Location
 }

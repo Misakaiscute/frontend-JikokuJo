@@ -2,11 +2,15 @@ import {getContext, setContext} from "svelte";
 import type QueryablesRepository from "../data/repository/queryablesRepository.ts";
 import type {Queryable, Route, Stop} from "../data/model/queryable.ts";
 import QueryablesRepositoryImpl from "../data/repository/queryablesRepositoryImpl.ts";
+import type TripsRepository from "../data/repository/tripsRepository.ts";
+import TripsRepositoryImpl from "../data/repository/tripsRepositoryImpl.ts";
 
 export default class ScheduleSearchController {
     private queryablesRepository: QueryablesRepository;
-    constructor(queryablesRepository: QueryablesRepository) {
+    private tripsRepository: TripsRepository;
+    constructor(queryablesRepository: QueryablesRepository, tripsRepository: TripsRepository) {
         this.queryablesRepository = queryablesRepository;
+        this.tripsRepository = tripsRepository;
     }
 
     private _searchString: string = $state("");
@@ -15,7 +19,12 @@ export default class ScheduleSearchController {
         }
         set searchString(value: string) {
             this._searchString = value;
-            this.selectedQueryable = null;
+            if (this.selectedQueryable?.kind === "stop" && this.selectedQueryable.name !== this._searchString) {
+                this.selectedQueryable = null
+            } else if (this.selectedQueryable?.kind === "route" && this.selectedQueryable.route_short_name !== this._searchString) {
+                this.selectedQueryable = null
+            }
+
             if (this.searchDebounce !== undefined) {
                 clearTimeout(this.searchDebounce);
             }
@@ -60,11 +69,15 @@ export default class ScheduleSearchController {
             return this.queryablesRepository.getQueryables();
         }
     }
+    public async searchTrips(): Promise<void> {
+        return this.tripsRepository.getTrips(this.selectedQueryable!!, this.date);
+    }
 
     public static KEY: symbol = Symbol("SCHEDULE_SEARCH_KEY");
     public static setScheduleSearchControllerContext = (): ScheduleSearchController => {
         return setContext(ScheduleSearchController.KEY, new ScheduleSearchController(
-            new QueryablesRepositoryImpl()
+            new QueryablesRepositoryImpl(),
+            new TripsRepositoryImpl()
         ));
     }
     public static getScheduleSearchControllerContext = () => {
