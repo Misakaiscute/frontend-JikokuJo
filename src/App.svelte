@@ -2,9 +2,9 @@
     import "leaflet/dist/leaflet.css";
 
     import Map from "./lib/map/Map.svelte";
-    import ScheduleSearchContainer from "./lib/schedule/presentation/ScheduleSearchContainer.svelte";
+    import Container from "./lib/schedule/presentation/Container.svelte";
 </script>
 <main class="h-svh w-svw relative">
     <Map/>
-    <ScheduleSearchContainer/>
+    <Container/>
 </main>

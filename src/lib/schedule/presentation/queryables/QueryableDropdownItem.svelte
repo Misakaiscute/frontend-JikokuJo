@@ -1,6 +1,6 @@
 ﻿<script lang="ts">
-    import type {Queryable} from "../data/model/queryable.ts";
-    import ScheduleSearchController from "./scheduleSearchController.svelte.ts";
+    import type {Queryable} from "../../data/model/queryable.ts";
+    import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
 
     const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext()
     let { queryable }: { queryable: Queryable } = $props();

@@ -1,13 +1,13 @@
 <script lang="ts">
-    import ScheduleSearchController from "./scheduleSearchController.svelte.ts";
+    import { slide } from "svelte/transition";
+    import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
 
     const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext();
-    let fetchQueryables = $state(scheduleSearchController.fetchQueryables());
 
     let trailingActionClear: boolean = $derived(scheduleSearchController.selectedQueryable === null && scheduleSearchController.searchString !== "");
     let trailingActionSearch: boolean = $derived(scheduleSearchController.selectedQueryable !== null);
 </script>
-{#await fetchQueryables}
+{#await scheduleSearchController.queryablesRequestResult}
     <div class="group flex h-10 w-full items-center rounded-md bg-zinc-200"></div>
 {:then _}
     <div class="group flex h-10 w-full items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
@@ -47,14 +47,14 @@
         {/if}
     </div>
 {:catch error}
-    <div class="group flex h-10 w-full justify-self-center items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
+    <div class="group flex h-10 w-full items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
         <p id="search-bar" class="flex-[1_0_auto] bg-transparent py-4 pl-2 text-sm text-red-800 outline-none">
             {error.message}
         </p>
         <button
                 aria-label="search-button"
                 class="mr-2 h-[70%] flex-none text-zinc-400 hover:transition-colors duration-200 hover:cursor-pointer hover:text-zinc-600"
-                onclick="{() => {fetchQueryables = scheduleSearchController.fetchQueryables()}}">
+                onclick="{() => {scheduleSearchController.fetchQueryables()}}">
             <svg xmlns="http://www.w3.org/2000/svg" class="aspect-1/1 h-full" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path d="M3 4v6h6" />
                 <path d="M3.51 15a9 9 0 1 0 .49-4.95" />

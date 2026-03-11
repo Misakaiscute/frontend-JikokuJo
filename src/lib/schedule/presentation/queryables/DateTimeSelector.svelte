@@ -1,5 +1,5 @@
 ﻿<script lang="ts">
-    import ScheduleSearchController from "./scheduleSearchController.svelte.ts";
+    import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
 
     const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext();
 </script>

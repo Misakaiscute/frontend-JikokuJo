@@ -14,7 +14,7 @@ export default class TripsRepositoryImpl implements TripsRepository {
     public trips!: ApiResult<Trip[] | null>;
 
     async getStops(tripId: string): Promise<void> {
-        const url: string = Api.api + `/trip/${tripId}/stops`;
+        const url: string = Api.api + `trip/${tripId}/stops`;
 
         if (this.stops.has(tripId) && this.stops.get(tripId)!!.kind === "fulfill") {
             return;
@@ -38,7 +38,7 @@ export default class TripsRepositoryImpl implements TripsRepository {
         }
     }
     async getShapes(tripId: string): Promise<void> {
-        const url: string = Api.api + `/trip/${tripId}/shapes`;
+        const url: string = Api.api + `trip/${tripId}/shapes`;
 
         if (this.shapes.has(tripId) && this.shapes.get(tripId)!!.kind === "fulfill") {
             return;
@@ -68,15 +68,21 @@ export default class TripsRepositoryImpl implements TripsRepository {
         let url: string;
         let response: Response;
         if (selectedQueryable.kind === "stop"){
-            url = Api.api + "/stop/trip";
+            url = Api.api + "stop/trip";
             const reqBody = {
                 ids: selectedQueryable.ids,
                 date: dateFormatted,
                 time: timeFormatted
             };
-            response = await fetch(url, { body: JSON.stringify(reqBody) });
+            response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(reqBody)
+            });
         } else {
-            url = Api.api + `/stop/${selectedQueryable.route_id}/trip/${dateFormatted}/${timeFormatted}`;
+            url = Api.api + `route/${selectedQueryable.route_id}/trip/${dateFormatted}/${timeFormatted}`;
             response = await fetch(url);
         }
 
