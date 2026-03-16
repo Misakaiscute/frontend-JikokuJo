@@ -11,7 +11,12 @@ export default class QueryablesRepositoryImpl implements QueryablesRepository {
     public queryables: ApiResult<Queryable[] | null> | null = null;
 
     async getQueryables(): Promise<void> {
-        const response = await fetch(this.url);
+        let response!: Response;
+        try {
+            response = await fetch(this.url);
+        } catch (e) {
+            throw new Error("Szerver nem elérhető.")
+        }
         const body = await response.json() as RootResponse<GetQueryablesObj>;
         if (!response.ok) {
             this.queryables = {
@@ -19,7 +24,7 @@ export default class QueryablesRepositoryImpl implements QueryablesRepository {
                 data: null,
                 errors: body.errors
             }
-            throw this.queryables.errors ? this.queryables.errors[0] : "Valami hiba történt.";
+            throw new Error(this.queryables.errors?.[0] ?? "Valami hiba történt.");
         } else {
             const fetchedQueryables: Queryable[] = [];
             fetchedQueryables.push(...(body.data.stops).map((it): Stop => ({

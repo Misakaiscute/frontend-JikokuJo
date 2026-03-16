@@ -6,10 +6,11 @@
     let { queryable }: { queryable: Queryable } = $props();
 </script>
 {#if queryable.kind === "stop"}
-    <div class="flex-[0_0_auto] h-10 w-full my-0.25 bg-white rounded-md flex items-center hover:cursor-pointer">
+    <div class="flex-[0_0_auto] h-10 w-full bg-white rounded-md flex items-center hover:cursor-pointer">
         <button
             aria-label="{queryable.name}"
-            class="h-full w-full px-2 flex items-center justify-start truncate transition-all duration-300 hover:cursor-pointer hover:shadow-sm/20"
+            class="h-full w-full px-2 flex items-center justify-start truncate border-2 border-zinc-200 rounded-md
+                   transition-all duration-300 hover:cursor-pointer hover:border-zinc-800"
             onclick="{() => {
                 scheduleSearchController.selectedQueryable = queryable;
                 scheduleSearchController.searchString = queryable.name;
@@ -18,11 +19,13 @@
         >{queryable.name}</button>
     </div>
 {:else if queryable.kind === "route"}
-    <div style="background: {queryable.color ? '#' + queryable.color : '#000000'}"
-         class="flex-[0_0_auto] h-10 w-full my-0.25 rounded-md flex items-center hover:cursor-pointer">
+    <div style="--route-color: {'#' + (queryable.color ?? '000000')};"
+         class="flex-[0_0_auto] h-10 w-full bg-white rounded-md flex items-center transition-colors duration-200
+                hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)]">
          <button
              aria-label="{queryable.route_short_name}"
-             class="h-full w-full px-2 flex items-center justify-start truncate transition-all duration-300 hover:cursor-pointer hover:shadow-sm/20"
+             class="h-full w-full px-2 flex items-center justify-start truncate border-2 border-[var(--route-color)] rounded-md
+                    transition-all duration-300 hover:cursor-pointer"
              onclick="{() => {
                  scheduleSearchController.searchString = queryable.route_short_name;
                  scheduleSearchController.selectedQueryable = queryable;

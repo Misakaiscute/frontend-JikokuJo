@@ -5,44 +5,71 @@ import QueryablesRepositoryImpl from "../data/repository/queryablesRepositoryImp
 import type TripsRepository from "../data/repository/tripsRepository.ts";
 import TripsRepositoryImpl from "../data/repository/tripsRepositoryImpl.ts";
 import URLParamController from "../../core/utils/urlParamController.ts";
+import type {Trip} from "../data/model/trip.ts";
 
 export default class ScheduleSearchController {
     private queryablesRepository: QueryablesRepository;
     private tripsRepository: TripsRepository;
+    public searchState: "queryable_search" | "trip_selection" = $state("queryable_search");
     constructor(queryablesRepository: QueryablesRepository, tripsRepository: TripsRepository) {
         this.queryablesRepository = queryablesRepository;
         this.tripsRepository = tripsRepository;
 
-        this.handleSearchParams();
+        this.init();
     }
-    private handleSearchParams = (): void => {
-        const searchParamQueryableName: string | null = URLParamController.get("queryable");
-        if (searchParamQueryableName !== null) {
+
+    private async init(): Promise<void> {
+        if (URLParamController.contains(this.QUERYABLE_QUERY_PARAM_KEY)) {
+            await this.handleQueryableSearchParams();
+            if (URLParamController.contains(this.TRIP_QUERY_PARAM_KEY)) {
+                await this.handleTripSearchParams();
+                this.searchState = "trip_selection";
+            } else {
+                this.searchState = "queryable_search";
+            }
+        } else {
             this.fetchQueryables();
-            this.queryablesRequestResult?.then(() => {
-                if (this.queryablesRepository.queryables?.kind === "fulfill") {
-                    this._selectedQueryable = this.queryablesRepository.queryables?.data?.find((it: Queryable) => {
-                        switch (it.kind){
-                            case "stop":
-                                if (it.name === searchParamQueryableName){
-                                    this.searchString = searchParamQueryableName;
-                                    return true;
-                                }
-                                break;
-                            case "route":
-                                if (it.route_short_name === searchParamQueryableName){
-                                    this.searchString = searchParamQueryableName;
-                                    return true;
-                                }
-                                break;
-                        }
-                    }) ?? null;
-                }
-            });
+            this.searchState = "queryable_search";
         }
     }
 
-    public searchState: "queryable_search" | "trip_selection" = "queryable_search";
+    private async handleQueryableSearchParams(): Promise<void> {
+        const searchParamQueryableName: string = URLParamController.get(this.QUERYABLE_QUERY_PARAM_KEY)!!;
+
+        this.fetchQueryables();
+        await this.queryablesRequestResult?.then(() => {
+            if (this.queryablesRepository.queryables?.kind === "fulfill") {
+                this.selectedQueryable = this.queryablesRepository.queryables?.data?.find((it: Queryable) => {
+                    switch (it.kind){
+                        case "stop":
+                            if (it.name === searchParamQueryableName){
+                                this.searchString = searchParamQueryableName;
+                                return true;
+                            }
+                            break;
+                        case "route":
+                            if (it.route_short_name === searchParamQueryableName){
+                                this.searchString = searchParamQueryableName;
+                                return true;
+                            }
+                            break;
+                    }
+                }) ?? null;
+            }
+        });
+    }
+    private async handleTripSearchParams(): Promise<void> {
+        const searchParamTripId: string = URLParamController.get(this.TRIP_QUERY_PARAM_KEY)!!;
+
+        await this.searchTrips();
+        await this.tripRequestResult?.then(() => {
+            if (this.tripsRepository.trips?.kind === "fulfill") {
+                this.selectedTrip = this.tripsRepository.trips.data!!.find((it: Trip) => {
+                    return it.id === searchParamTripId;
+                }) ?? null;
+            }
+        })
+    }
 
     private _searchString: string = $state("");
         get searchString(): string {
@@ -50,10 +77,15 @@ export default class ScheduleSearchController {
         }
         set searchString(value: string) {
             this._searchString = value;
-            if (this._selectedQueryable?.kind === "stop" && this._selectedQueryable.name !== this._searchString) {
-                this._selectedQueryable = null
-            } else if (this._selectedQueryable?.kind === "route" && this._selectedQueryable.route_short_name !== this._searchString) {
-                this._selectedQueryable = null
+            this.selectedTrip = null;
+            if (value === ""){
+                this.dropdownShown = true;
+            }
+
+            if (this._selectedQueryable?.kind === "stop" && this._selectedQueryable.name !== value) {
+                this.selectedQueryable = null;
+            } else if (this._selectedQueryable?.kind === "route" && this._selectedQueryable.route_short_name !== value) {
+                this.selectedQueryable = null;
             }
 
             if (this.searchDebounce !== undefined) {
@@ -90,7 +122,7 @@ export default class ScheduleSearchController {
         }
         set selectedQueryable(value: Queryable | null) {
             if (value === null) {
-                URLParamController.remove("queryable");
+                URLParamController.remove(this.QUERYABLE_QUERY_PARAM_KEY);
             }
             this._selectedQueryable = value;
         }
@@ -100,17 +132,28 @@ export default class ScheduleSearchController {
 
     public queryablesRequestResult: Promise<void> | null = $state(null);
     public fetchQueryables(): void {
-        const queryablesFetched: boolean = this.queryablesRepository.queryables !== null;
-        if (queryablesFetched) {
-            const queryablesAvailable: boolean = this.queryablesRepository.queryables!!.kind === "fulfill";
-            if (!queryablesAvailable) {
-                this.queryablesRequestResult = this.queryablesRepository.getQueryables() as unknown as Promise<void>;
-            }
-        } else {
+        const queryablesFetched: boolean = this.queryablesRepository.queryables?.kind === "fulfill";
+        if (!queryablesFetched) {
             this.queryablesRequestResult = this.queryablesRepository.getQueryables() as unknown as Promise<void>;
+        } else {
+            this.queryablesRequestResult = Promise.resolve();
         }
     }
-    public tripsRequestResult: Promise<void> | null = $state(null);
+
+    public trips: Trip[] = $state([]);
+    private _selectedTrip: Trip | null = $state(null);
+        get selectedTrip(): Trip | null {
+            return this._selectedTrip;
+        }
+        set selectedTrip(value: Trip | null) {
+            if (value === null) {
+                URLParamController.remove(this.TRIP_QUERY_PARAM_KEY);
+            } else {
+                URLParamController.set(this.TRIP_QUERY_PARAM_KEY, value.id);
+            }
+            this._selectedTrip = value;
+        }
+    public tripRequestResult: Promise<void> | null = $state(null);
     public async searchTrips(): Promise<void> {
         switch (this.selectedQueryable?.kind){
             case "route":
@@ -120,10 +163,41 @@ export default class ScheduleSearchController {
                 URLParamController.set("queryable", this.selectedQueryable.name);
                 break;
         }
-        this.searchState = "trip_selection";
-        console.log(this.searchState);
-        this.tripsRequestResult = this.tripsRepository.getTrips(this.selectedQueryable!!, this.date) as unknown as Promise<void>;
+        this.tripRequestResult = this.tripsRepository.getTrips(this.selectedQueryable!!, this.date) as unknown as Promise<void>;
+
+        this.tripRequestResult
+            .then(() => {
+                this.trips = this.tripsRepository.trips!!.data!!.sort((a: Trip, b: Trip) => {
+                    return a.stops[0].arrival_time - b.stops[0].arrival_time
+                });
+            })
+            .catch(() => {
+                this.trips = [];
+            });
     }
+
+    public getRouteForTrip = (routeId: string): Route => {
+        if (this.queryablesRepository.queryables?.kind === "fulfill") {
+            const isFound: Queryable | null = this.queryablesRepository.queryables.data?.find((it: Queryable) => {
+                if (it.kind === "route"){
+                    return it.route_id === routeId;
+                }
+            }) ?? null;
+            if (isFound === null){
+                throw new Error("Nincs ilyen azonosítójú járat.");
+            } else {
+                return isFound as Route;
+            }
+        } else {
+            throw new Error("A járatok nem elérhetőek.");
+        }
+    }
+
+    public async onTripSelect(onSuccess: (() => void)): Promise<void> {
+        //TODO: Implement
+    }
+    private readonly QUERYABLE_QUERY_PARAM_KEY: string = "queryable";
+    private readonly TRIP_QUERY_PARAM_KEY: string = "trip";
 
     public static KEY: symbol = Symbol("SCHEDULE_SEARCH_KEY");
     public static setScheduleSearchControllerContext = (): ScheduleSearchController => {
