@@ -7,7 +7,7 @@
     <div class="flex justify-center items-center h-auto w-full bg-transparent">
         <button
             aria-label="{scheduleSearchController.dropdownShown ? 'bezár' : 'kinyit'}"
-            class="group relative -top-1.5 h-6 w-8 bg-white rounded-b-sm transition-all duration-150 hover:top-0 hover:cursor-pointer"
+            class="group relative -top-1.5 h-6 w-8 bg-white rounded-b-sm transition-all duration-150 hover:top-0 hover:cursor-pointer pointer-events-auto"
             onclick="{() => {scheduleSearchController.dropdownShown = !scheduleSearchController.dropdownShown}}"
         >
             <svg

@@ -1,11 +1,13 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
     import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
+    import MapController from "../../../map/mapController.svelte.ts";
 
     import DropdownItem from "./TripDropdownItem.svelte";
     import TripDropdownGhostItem from "./TripDropdownGhostItem.svelte";
 
     const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext();
+    const mapController: MapController = MapController.getMapControllerContext();
 </script>
 {#await scheduleSearchController.tripRequestResult}
     {#if scheduleSearchController.dropdownShown}
@@ -27,6 +29,9 @@
                         callback="{() => {
                             scheduleSearchController.selectedTrip = trip;
                             scheduleSearchController.dropdownShown = false;
+                            scheduleSearchController.onTripSelect((stops, shapes, routeAssociated) => {
+                                mapController.displayTrip(stops, shapes, routeAssociated);
+                            });
                         }}"
                     />
                 {/each}

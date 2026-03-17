@@ -14,7 +14,8 @@ export interface GetStopsForTripObj extends Payload {
 }
 
 export interface GetShapesForTripObj extends Payload {
-    shapes: RoutePathPoint[]
+    shape_id: string;
+    points: RoutePathPoint[]
 }
 
 export interface GetTripsObj extends Payload {

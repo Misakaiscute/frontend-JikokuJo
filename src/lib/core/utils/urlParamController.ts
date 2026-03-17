@@ -25,6 +25,10 @@ export default class URLParamController {
     }
 
     private static replaceURL = (newURL: string) => {
-        window.history.replaceState({}, "", '?' + newURL);
+        if (newURL === ""){
+            window.history.replaceState({}, "",  newURL);
+        } else {
+            window.history.replaceState({}, "", '?' + newURL);
+        }
     }
 }
