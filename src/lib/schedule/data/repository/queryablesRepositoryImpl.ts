@@ -8,9 +8,13 @@ import type {ApiResult} from "../../../core/data/remote/apiResult.ts";
 export default class QueryablesRepositoryImpl implements QueryablesRepository {
     private readonly url: string = Api.api + "queryables";
 
-    public queryables: ApiResult<Queryable[] | null> | null = null;
+    private queryables: ApiResult<Queryable[] | null> | null = null;
 
-    async getQueryables(): Promise<void> {
+    async getQueryables(): Promise<Queryable[]> {
+        if (this.queryables !== null && this.queryables.kind === "fulfill") {
+            return this.queryables.data!!;
+        }
+
         let response!: Response;
         try {
             response = await fetch(this.url);
@@ -41,7 +45,7 @@ export default class QueryablesRepositoryImpl implements QueryablesRepository {
                 data: fetchedQueryables,
                 errors: []
             }
-            return;
+            return this.queryables.data!!;
         }
     }
 }

@@ -1,16 +1,18 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
-    import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
     import MapController from "../../../map/mapController.svelte.ts";
+    import TripSelectionController from "../tripSelectionController.svelte.ts";
 
     import DropdownItem from "./TripDropdownItem.svelte";
     import TripDropdownGhostItem from "./TripDropdownGhostItem.svelte";
+    import ActionController from "../actionController.svelte.ts";
 
-    const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext();
+    const tripSelectionController: TripSelectionController = TripSelectionController.getTripSelectionControllerContext();
+    const actionController: ActionController = ActionController.getActionControllerContext();
     const mapController: MapController = MapController.getMapControllerContext();
 </script>
-{#await scheduleSearchController.tripRequestResult}
-    {#if scheduleSearchController.dropdownShown}
+{#await tripSelectionController.tripRequestResult}
+    {#if tripSelectionController.dropdownShown}
         <div transition:slide={{ duration: 200 }} class="flex-[1_0_auto] max-h-[60svh] w-full mt-1">
             <div class="h-full w-full flex flex-col p-0.5 rounded-md bg-zinc-200">
                 {#each {length: 8} as _}
@@ -20,19 +22,21 @@
         </div>
     {/if}
 {:then _}
-    {#if scheduleSearchController.dropdownShown}
+    {#if tripSelectionController.dropdownShown}
         <div transition:slide={{ duration: 200 }} class="flex-[1_0_auto] max-h-[60svh] w-full mt-1">
             <div class="h-full w-full flex flex-col p-0.5 rounded-md bg-zinc-200 overflow-y-auto">
-                {#each scheduleSearchController.trips as trip}
+                {#each tripSelectionController.trips as trip}
                     <DropdownItem
                         trip={trip}
-                        callback="{() => {
-                            scheduleSearchController.selectedTrip = trip;
-                            scheduleSearchController.dropdownShown = false;
-                            scheduleSearchController.onTripSelect((stops, shapes, routeAssociated) => {
+                        callback={() => {
+                            tripSelectionController.selectedTrip = trip;
+                            tripSelectionController.dropdownShown = false;
+                            mapController.isTripLoading = true;
+                            tripSelectionController.onTripSelect((stops, shapes, routeAssociated) => {
                                 mapController.displayTrip(stops, shapes, routeAssociated);
+                                mapController.isTripLoading = false;
                             });
-                        }}"
+                        }}
                     />
                 {/each}
             </div>

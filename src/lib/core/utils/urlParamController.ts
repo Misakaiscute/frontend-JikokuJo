@@ -19,6 +19,10 @@ export default class URLParamController {
         this.replaceURL(url.toString());
     }
 
+    public static purge = () => {
+        this.replaceURL("");
+    }
+
     public static contains = (param: string): boolean => {
         const url = new URLSearchParams(window.location.search);
         return url.has(param);

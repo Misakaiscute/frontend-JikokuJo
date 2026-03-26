@@ -11,6 +11,8 @@ export default class MapController {
     private currentTripPolylineShadow: Polyline | null = null;
     private currentTripStops: CircleMarker[] = [];
 
+    public isTripLoading: boolean = $state(false);
+
     public bindMap(mapHolderId: HTMLDivElement) {
         this.map = Leaflet.map(mapHolderId, {
             zoomControl: false,
@@ -24,29 +26,24 @@ export default class MapController {
             attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
         }).addTo(this.map);
     }
+    public removeTrip = () => {
+        this.currentTripStops.forEach((it: CircleMarker) => it.removeFrom(this.map!!));
+        this.currentTripStops = [];
+        this.currentTripPolyline?.removeFrom(this.map!!);
+        this.currentTripPolyline = null;
+        this.currentTripPolylineShadow?.removeFrom(this.map!!);
+        this.currentTripPolylineShadow = null;
+    }
 
     public displayTrip = (stops: StopDetailed[], shapes: RoutePathPoint[], routeAssociated: Route): void => {
-        if (this.currentTripPolyline !== null) {
-            this.currentTripPolyline.removeFrom(this.map!!);
-            this.currentTripPolyline = null;
-        }
-        if (this.currentTripPolylineShadow !== null) {
-            this.currentTripPolylineShadow.removeFrom(this.map!!);
-            this.currentTripPolylineShadow = null;
-        }
-        if (this.currentTripStops.length > 0) {
-            this.currentTripStops.forEach((it: CircleMarker) => {
-                it.removeFrom(this.map!!);
-            });
-            this.currentTripStops = [];
-        }
+        this.removeTrip();
 
         const polylinePoints: LatLngExpression[][] = shapes.map((it: RoutePathPoint) => {
             return [it.location.lat, it.location.lon] as unknown as LatLngExpression[];
         });
         this.currentTripPolylineShadow = Leaflet.polyline(polylinePoints, {
             color: '#ffffff',
-            weight: 14,
+            weight: 10,
             opacity: 0.9,
             lineCap: 'round',
             lineJoin: 'round'
