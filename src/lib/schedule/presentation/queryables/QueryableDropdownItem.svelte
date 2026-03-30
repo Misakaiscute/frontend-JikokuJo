@@ -11,11 +11,11 @@
             aria-label="{queryable.name}"
             class="h-full w-full px-2 flex items-center justify-start truncate border-2 border-zinc-200 rounded-md
                    transition-all duration-300 hover:cursor-pointer hover:border-zinc-800"
-            onclick="{() => {
+            onclick={() => {
                 scheduleSearchController.selectedQueryable = queryable;
                 scheduleSearchController.searchString = queryable.name;
                 scheduleSearchController.dropdownShown = false;
-            }}"
+            }}
         >{queryable.name}</button>
     </div>
 {:else if queryable.kind === "route"}
@@ -26,11 +26,11 @@
              aria-label="{queryable.route_short_name}"
              class="h-full w-full px-2 flex items-center justify-start truncate border-2 border-[var(--route-color)] rounded-md
                     transition-all duration-300 hover:cursor-pointer"
-             onclick="{() => {
+             onclick={() => {
                  scheduleSearchController.searchString = queryable.route_short_name;
                  scheduleSearchController.selectedQueryable = queryable;
                  scheduleSearchController.dropdownShown = false;
-             }}"
+             }}
          >{queryable.route_short_name}</button>
     </div>
 {/if}
