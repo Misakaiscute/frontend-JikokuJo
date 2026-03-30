@@ -11,7 +11,7 @@
     let trailingActionSearch: boolean = $derived(scheduleSearchController.selectedQueryable !== null);
 </script>
 {#await scheduleSearchController.queryablesFetchRequestResult}
-    <div class="group flex h-10 w-full items-center rounded-md bg-zinc-200"></div>
+    <div class="group flex h-10 w-full items-center rounded-md loading-shimmer"></div>
 {:then _}
     <div class="group flex h-10 w-full items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
         <input
@@ -50,7 +50,7 @@
 {:catch error}
     <div class="group flex h-10 w-full items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
         <p id="search-bar" class="flex-[1_0_auto] bg-transparent py-4 pl-2 text-sm text-red-800 outline-none">
-            {error}
+            {error.message}
         </p>
         <button
             aria-label="search-button"

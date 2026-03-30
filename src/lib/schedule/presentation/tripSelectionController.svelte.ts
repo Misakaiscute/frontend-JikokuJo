@@ -78,7 +78,9 @@ export default class TripSelectionController {
     }
 
     public tripSelectRequestResult: Promise<void> | null = $state(null);
-    public async onTripSelect(onSuccess: ((stops: StopDetailed[], shapes: RoutePathPoint[], routeAssociated: Route) => void)): Promise<void> {
+    public async onTripSelect(
+        onSuccess: ((stops: StopDetailed[], shapes: RoutePathPoint[], routeAssociated: Route) => void)
+    ): Promise<void> {
         if (this.selectedTrip !== null) {
             let stops: StopDetailed[] = [];
             let shapes: RoutePathPoint[] = [];
@@ -103,7 +105,7 @@ export default class TripSelectionController {
             onSuccess(
                 stops,
                 shapes,
-                await this.getRouteForTrip(this.selectedTrip.route_id) as Route,
+                await this.getRouteForTrip(this.selectedTrip.route_id) as Route
             );
         }
     }

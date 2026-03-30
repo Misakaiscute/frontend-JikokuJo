@@ -2,14 +2,25 @@
     import { slide } from "svelte/transition";
     import MapController from "../../../map/mapController.svelte.ts";
     import TripSelectionController from "../tripSelectionController.svelte.ts";
+    import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
 
     import DropdownItem from "./TripDropdownItem.svelte";
     import TripDropdownGhostItem from "./TripDropdownGhostItem.svelte";
-    import ActionController from "../actionController.svelte.ts";
+    import type {Trip} from "../../data/model/trip.ts";
 
     const tripSelectionController: TripSelectionController = TripSelectionController.getTripSelectionControllerContext();
-    const actionController: ActionController = ActionController.getActionControllerContext();
+    const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.getScheduleSearchControllerContext();
     const mapController: MapController = MapController.getMapControllerContext();
+
+    const onTripSelect = (trip: Trip) => {
+        tripSelectionController.selectedTrip = trip;
+        tripSelectionController.dropdownShown = false;
+        mapController.isTripLoading = true;
+        tripSelectionController.onTripSelect((stops, shapes, routeAssociated) => {
+            mapController.displayTrip(stops, shapes, routeAssociated, scheduleSearchController.selectedQueryable!!);
+            mapController.isTripLoading = false;
+        });
+    }
 </script>
 {#await tripSelectionController.tripRequestResult}
     {#if tripSelectionController.dropdownShown}
@@ -28,15 +39,7 @@
                 {#each tripSelectionController.trips as trip}
                     <DropdownItem
                         trip={trip}
-                        callback={() => {
-                            tripSelectionController.selectedTrip = trip;
-                            tripSelectionController.dropdownShown = false;
-                            mapController.isTripLoading = true;
-                            tripSelectionController.onTripSelect((stops, shapes, routeAssociated) => {
-                                mapController.displayTrip(stops, shapes, routeAssociated);
-                                mapController.isTripLoading = false;
-                            });
-                        }}
+                        callback={() => { onTripSelect(trip); }}
                     />
                 {/each}
             </div>
