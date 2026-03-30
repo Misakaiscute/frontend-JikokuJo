@@ -18,3 +18,19 @@
         transform: rotate(360deg);
     }
 }
+
+.loading-shimmer {
+    background-color: #ffffff;
+    animation: shimmer 2s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0% {
+        background-color: #ffffff;
+    }
+    50% {
+        background-color: #ebebeb;
+    }
+    100% {
+        background-color: #ffffff;
+    }
+}
