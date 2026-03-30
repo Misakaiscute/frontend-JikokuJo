@@ -45,7 +45,7 @@ export default class TripSelectionController {
         this.tripRequestResult = new Promise((resolve, reject) => {
             this.tripsRepository.getTrips(forQueryable, forDate)
                 .then((res: Trip[]) => {
-                    this.trips = res;
+                    this.trips = res.sort((curr: Trip, before: Trip) => curr.stops[0].arrival_time - before.stops[0].arrival_time);
                     this.date = forDate;
                     resolve();
                 })
