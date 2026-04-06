@@ -19,7 +19,7 @@
 >
     <div
         role="button" tabindex="-1"
-        class="h-[80svh] w-[clamp(200px,40svw,300px)] rounded-t-md rounded-b-lg bg-white flex flex-col justify-start items-start pointer-events-auto"
+        class="h-[clamp(20rem,80svh,36rem)] w-[clamp(12rem,40svw,24rem)] rounded-t-md rounded-b-lg bg-white flex flex-col justify-start items-start pointer-events-auto"
         onclick={(e) => e.stopPropagation()}
     >
         <div class="flex-[1_1_auto] w-full py-1 px-2 flex flex-col items-start justify-start">
