@@ -187,12 +187,14 @@ export default class MapController {
         });
     }
 
-
     private static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
     public static setMapControllerContext = (): MapController => {
-        return setContext(MapController.KEY, new MapController());
+        return setContext(this.KEY, new MapController());
     }
     public static getMapControllerContext = () => {
-        return getContext<ReturnType<typeof this.setMapControllerContext>>(MapController.KEY);
+        //return getContext<ReturnType<typeof this.setMapControllerContext>>(this.KEY);
+        const ctx = getContext<ReturnType<typeof this.setMapControllerContext>>(this.KEY);
+        if (!ctx) throw new Error("MapController context not found — did you call setMapControllerContext?");
+        return ctx;
     }
 }

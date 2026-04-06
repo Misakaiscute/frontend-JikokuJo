@@ -80,7 +80,7 @@
         }
     );
 </script>
-<div class="absolute left-0 top-0 p-2 flex pointer-events-none max-[460px]:w-full">
+<div class="flex">
     <nav class="flex-[0_0_30px] h-auto flex flex-col gap-1 mr-1 pointer-events-auto">
         <NavigationContainer/>
     </nav>

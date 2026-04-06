@@ -1,4 +1,4 @@
-import type {Payload} from "./../../../core/data/remote/apiResponseStructure.ts";
+﻿import type {Payload} from "./../../../core/data/remote/apiResponseStructure.ts";
 import type {Route, Stop} from "../model/queryable.ts";
 import type {StopDetailed} from "../model/stopDetailed.ts";
 import type {RoutePathPoint} from "../model/location.ts";
