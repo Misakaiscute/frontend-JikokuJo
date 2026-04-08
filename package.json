@@ -26,5 +26,8 @@
     "leaflet": "^1.9.4",
     "pusher-js": "^8.4.3",
     "tailwindcss": "^4.2.1"
+  },
+  "engines": {
+    "node": ">= 20.19"
   }
 }
