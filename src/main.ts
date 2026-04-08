@@ -1,6 +1,7 @@
-import { mount } from 'svelte'
-import './app.css'
-import App from './App.svelte'
+import { mount } from 'svelte';
+import './lib/core/utils/echo.ts';
+import './app.css';
+import App from './App.svelte';
 import axios from "axios";
 import api from "./lib/core/data/remote/api.ts";
 

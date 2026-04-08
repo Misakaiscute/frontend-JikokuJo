@@ -79,7 +79,7 @@ export default class TripsRepositoryImpl implements TripsRepository {
                     throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
                 });
             } catch {
-                throw new Error("Szerver nem elérhető.")
+                throw new Error("Szerver nem elérhető.");
             }
         } else {
             try {
@@ -90,8 +90,20 @@ export default class TripsRepositoryImpl implements TripsRepository {
                         throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
                     });
             } catch {
-                throw new Error("Szerver nem elérhető.")
+                throw new Error("Szerver nem elérhető.");
             }
+        }
+    }
+    async openBroadcast(forTrip: Trip): Promise<void> {
+        try {
+            await axios.get<RootResponse<any>>(`/api/vehicle-positions/poll/${forTrip.id}`)
+                .then(() => {
+                    return;
+                }).catch((err: AxiosError<RootResponse<any>>) => {
+                    throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt");
+                });
+        } catch {
+            throw new Error("Szerver nem elérhető");
         }
     }
 }

@@ -61,7 +61,7 @@
                     Emlékezz rám
                 </label>
                 <SubmitButton text="Bejelentkezés" onclick={async () => { await userController.attemptLogin(email, password, rememberMe)}}/>
-            {:catch err}
+            {:catch err: Error}
                 <InputField bind:value={email} label="Email" type="text" placeholder="kispista@gmail.com"/>
                 <InputField bind:value={password} label="Jelszó" type="password"/>
                 <label class="text-sm mt-3 mb-0.5 pl-1">

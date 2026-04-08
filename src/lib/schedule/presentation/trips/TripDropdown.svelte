@@ -17,7 +17,13 @@
         tripSelectionController.dropdownShown = false;
         mapController.isTripLoading = true;
         tripSelectionController.onTripSelect((stops, shapes, routeAssociated) => {
-            mapController.displayTrip(stops, shapes, routeAssociated, scheduleSearchController.selectedQueryable!!);
+            mapController.displayTrip(
+                trip,
+                stops,
+                shapes,
+                routeAssociated,
+                scheduleSearchController.selectedQueryable!!
+            );
             mapController.isTripLoading = false;
         });
     }

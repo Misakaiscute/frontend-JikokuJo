@@ -13,36 +13,36 @@ export default class UserRepositoryImpl implements UserRepository {
         }
     }
     async login(email: string, password: string, rememberMe: boolean): Promise<void> {
-        try {
-            await axios.get("/sanctum/csrf-cookie");
-            return await axios.post<RootResponse<any>>(`/api/user/login/${rememberMe}`, {
-                email: email,
-                password: password,
-            })
-                .then(() => { return; })
-                .catch((err: AxiosError<RootResponse<any>>) => {
+        await axios.get("/sanctum/csrf-cookie");
+        return await axios.post<RootResponse<any>>(`/api/user/login/${rememberMe}`, {
+            email: email,
+            password: password,
+        })
+            .then(() => { return; })
+            .catch((err: AxiosError<RootResponse<any>>) => {
+                if (err.response?.data?.errors.length == 0){
+                    throw new Error(err.response?.data?.message ?? "Valami hiba történt.");
+                } else {
                     throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
-                });
-        } catch {
-            throw new Error("Valami hiba történt.");
-        }
+                }
+            });
     }
 
     async register(firstName: string, lastName: string, email: string, password: string, passwordConfirmation: string): Promise<void> {
-        try {
-            return await axios.post<RootResponse<any>>("/api/user/register", {
-                first_name: firstName,
-                second_name: lastName,
-                email: email,
-                password: password,
-                password_confirmation: passwordConfirmation
-            })
-                .then(() => { return; })
-                .catch((err: AxiosError<RootResponse<any>>) => {
+        return await axios.post<RootResponse<any>>("/api/user/register", {
+            first_name: firstName,
+            second_name: lastName,
+            email: email,
+            password: password,
+            password_confirmation: passwordConfirmation
+        })
+            .then(() => { return; })
+            .catch((err: AxiosError<RootResponse<any>>) => {
+                if (err.response?.data?.errors.length == 0){
+                    throw new Error(err.response?.data?.message ?? "Valami hiba történt.");
+                } else {
                     throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
-                });
-        } catch {
-            throw new Error("Valami hiba történt.");
-        }
+                }
+            });
     }
 }

@@ -23,15 +23,17 @@ export default class UserController {
     public attemptLogin = async (email: string, password: string, rememberMe: boolean): Promise<void> => {
         this.loginRequestResult = new Promise<void>(async (resolve, reject) => {
             if (!validateEmail(email)){
-                reject("Adjon meg valós email címet.");
+                reject(new Error("Adjon meg valós email címet."));
             } else if (!validatePassword(password)){
-                reject("A jelszó legalább 8 karakter hosszú kell, hogy legyen.")
+                reject(new Error("A jelszó legalább 8 karakter hosszú kell, hogy legyen."));
             } else {
                 await this.userRepository.login(email, password, rememberMe)
                     .then(() => {
                         this.isLoggedIn = Promise.resolve();
                         resolve();
-                    }).catch((err) => reject(err));
+                    }).catch((err: Error) => {
+                        reject(new Error(err.message));
+                    });
             }
         });
     }
@@ -40,15 +42,18 @@ export default class UserController {
     public attemptRegister = async (firstName: string, lastName: string, email: string, password: string, passwordConfirmation: string): Promise<void> => {
         this.registerRequestResult = new Promise<void>(async (resolve, reject) => {
             if (!validateEmail(email)){
-                reject("Adjon meg valós email címet.");
+                reject(new Error("Adjon meg valós email címet."));
             } else if (!validatePassword(password)){
-                reject("A jelszó legalább 8 karakter hosszú kell, hogy legyen.")
+                reject(new Error("A jelszó legalább 8 karakter hosszú kell, hogy legyen."));
             } else if (password !== passwordConfirmation) {
-                reject("A két jelszó nem egyezik")
+                reject(new Error("A két jelszó nem egyezik."));
             } else {
                 await this.userRepository.register(firstName, lastName, email, password, passwordConfirmation)
-                    .then(() => resolve)
-                    .catch((err) => reject(err));
+                    .then(() => {
+                        resolve();
+                    }).catch((err: Error) => {
+                        reject(new Error(err.message));
+                    });
             }
         });
     }

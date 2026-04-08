@@ -1,6 +1,7 @@
 export interface RootResponse<out T extends Payload>{
     data: T,
-    errors: string[]
+    errors: string[],
+    message: string
 }
 
 export interface Payload {}

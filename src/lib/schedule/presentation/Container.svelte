@@ -70,7 +70,13 @@
                 mapController.isTripLoading = true;
                 await tripSelectionController.onTripSelect(
                     (stops, shapes, routeAssociated) => {
-                        mapController.displayTrip(stops, shapes, routeAssociated, scheduleSearchController.selectedQueryable!!);
+                        mapController.displayTrip(
+                            tripFound!!,
+                            stops,
+                            shapes,
+                            routeAssociated,
+                            scheduleSearchController.selectedQueryable!!
+                        );
                         mapController.isTripLoading = false;
                     }
                 )
