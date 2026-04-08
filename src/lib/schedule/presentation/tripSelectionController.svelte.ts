@@ -78,9 +78,9 @@ export default class TripSelectionController {
     }
 
     public tripSelectRequestResult: Promise<void> | null = $state(null);
-    public async onTripSelect(
+    public onTripSelect = async (
         onSuccess: ((stops: StopDetailed[], shapes: RoutePathPoint[], routeAssociated: Route) => void)
-    ): Promise<void> {
+    ): Promise<void> => {
         if (this.selectedTrip !== null) {
             let stops: StopDetailed[] = [];
             let shapes: RoutePathPoint[] = [];
@@ -102,13 +102,26 @@ export default class TripSelectionController {
                 });
 
             this.tripSelectRequestResult = Promise.resolve();
-            onSuccess(
-                stops,
-                shapes,
-                await this.getRouteForTrip(this.selectedTrip.route_id) as Route
-            );
+
+            try {
+                this.openBroadcasting(this.selectedTrip);
+            } finally {
+                onSuccess(
+                    stops,
+                    shapes,
+                    await this.getRouteForTrip(this.selectedTrip.route_id) as Route
+                );
+            }
         }
     }
+    private openBroadcasting = async (forTrip: Trip): Promise<void> => {
+        return new Promise(async (reject, resolve) => {
+            await this.tripsRepository.openBroadcast(forTrip)
+                .then(() => resolve)
+                .catch((err) => reject(err))
+        });
+    }
+
     public static readonly DATETIME_QP_KEY: string = "at";
     public static readonly TRIP_QP_KEY: string = "trip";
 

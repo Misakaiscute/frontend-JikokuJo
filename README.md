@@ -1,47 +1,33 @@
-# Svelte + TS + Vite
+# JikokuJó, a public transport helper.
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+## JikokuJó is trusty companion for finding your way around the streets of Budapest, created by Máté Demény and Hunor Horchy as part of their highschool exit masterpiece.
 
-## Recommended IDE Setup
+## Using offcial data from the local public transport provider (BKK), the app is capable of:
+- ### 🔎 Searching for either line numbers or specific stops around Budapest for a given timeframe.
+- ### 🗺️ Displaying the route of any local vehicle on the map.
+- ### 📌 Following the line on its way if the given vehicle is equipped with trackers.
+- ### ⭐ Storing users favorite trips and notifying them about it them depending on how the user set it up.
+- ### ✈️ Sharing routes as links with friend to aid with planning.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+## Using what?
 
-## Need an official Svelte framework?
+### This part of the project is a web based SPA, which was written in [Svelte](https://svelte.dev) and [TypeScript](https://www.typescriptlang.org), using [Tailwind](https://tailwindcss.com) for styling. Utilizing [Vite](https://vite.dev) as the modular bundler for it's help with live reloading during development.
+### For calling the api's endpoints [Axios](https://axios-http.com), and to to connect to the websocket server [Laravel Echo](https://github.com/laravel/echo) was used.
+### The package manager for this project is [npm](https://www.npmjs.com).
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+## How to install
+### Requirements:
+- #### Node.js version 20.19 or higher
+- #### Internet access
 
-## Technical considerations
+### Installation process:
+0. #### As the [api](https://github.com/Misakaiscute/backend-JikokuJo) is necessary to use this app, it's highly recommended to set that up first.
+1. #### Clone the repository into your selected directory
+2. #### Run **npm install** command from the directory, to install the apps dependencies.
+3. #### Editing the **.env.example** file if required, and renaming it to **.env**. (If you didn't change any .env varibles on the api, all there is to do is the renaming.)
+4. #### Run **npm run dev** command from the directory, to serve the application. 
+5. #### Go to **http://localhost:5173** in your choosen browser.
+6. #### 🏁You're done🏁
 
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
-```
+## ⚠️Warning⚠️
+### This is just one repository of the three, which make up the complete project. This repository doesn't provide any functionality without the [api](https://github.com/Misakaiscute/backend-JikokuJo), and for the full experience please consider checking out the [mobile app](https://github.com/Misakaiscute/mobile-JikokuJo).

@@ -2,8 +2,10 @@
 import type {StopDetailed} from "../schedule/data/model/stopDetailed.ts";
 import type {Location, RoutePathPoint} from "../schedule/data/model/location.ts";
 import type {Queryable, Route} from "../schedule/data/model/queryable.ts";
+import type {Trip} from "../schedule/data/model/trip.ts";
 import {getContext, setContext} from "svelte";
 import {findCenterPoint, findSwitchingPoint} from "./mapUtils.ts";
+import type { VehiclePositionUpdate } from "./data/model/vehiclePositionUpdate.js";
 
 export default class MapController {
     private map: Leaflet.Map | undefined;
@@ -12,6 +14,9 @@ export default class MapController {
     private tripBeforeStopPolylineShadow: Polyline | null = null;
     private tripAfterStopPolylineShadow: Polyline | null = null;
     private tripStops: CircleMarker[] = [];
+
+    private currentTrip: Trip | null = null;
+    private realtimeVehicle: CircleMarker | null = null;
 
     public isTripLoading: boolean = $state(false);
 
@@ -28,6 +33,7 @@ export default class MapController {
             attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>"
         }).addTo(this.map);
     }
+
     public removeTrip = () => {
         this.tripStops.forEach((it: CircleMarker) => it.removeFrom(this.map!!));
         this.tripStops = [];
@@ -39,9 +45,17 @@ export default class MapController {
         this.tripAfterStopPolylineShadow = null;
         this.tripBeforeStopPolylineShadow?.removeFrom(this.map!!);
         this.tripBeforeStopPolylineShadow = null;
+        
+        if (this.currentTrip !== null){
+            window.Echo.leave(`trip.${this.currentTrip.id}`);
+        }
+        this.currentTrip = null;
+        this.realtimeVehicle = null;
+        
     }
 
     public displayTrip = (
+        trip: Trip,
         stops: StopDetailed[],
         shapes: RoutePathPoint[],
         routeAssociated: Route,
@@ -49,6 +63,7 @@ export default class MapController {
     ): void => {
         this.removeTrip();
 
+        //this.currentTrip = trip;
         switch(forQueryable.kind){
             case "route":
                 this.displayTripForRoute(shapes, stops, routeAssociated);
@@ -61,10 +76,16 @@ export default class MapController {
                 this.displayTripForStop(stopSelected, switchingPointIndex, shapes, stops, routeAssociated);
                 break;
         }
+        try {
+            this.registerListenerForVehiclePositionUpdate(trip);
+        } catch(e) {
+            console.log(e);
+        }
 
         this.alignToTripCenter(shapes);
         this.zoomOutToFitRoute(shapes);
     }
+
     private displayTripForStop = (
         stopSelected: StopDetailed,
         switchingPointIndex: number,
@@ -110,6 +131,7 @@ export default class MapController {
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);
+
         //setting the stops
         let afterSwitchingPoint: boolean = false;
         stops.forEach((it: StopDetailed) => {
@@ -144,7 +166,9 @@ export default class MapController {
         stops: StopDetailed[],
         routeAssociated: Route
     ): void => {
-        const route: LatLngExpression[] = shapes as unknown as LatLngExpression[];
+        const route: LatLngExpression[] = shapes.map((it: RoutePathPoint) => {
+            return it.location as unknown as LatLngExpression;
+        });
 
         this.tripAfterStopPolylineShadow = Leaflet.polyline(route, {
             color: '#ffffff',
@@ -160,6 +184,7 @@ export default class MapController {
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);
+
         //setting the stops
         stops.forEach((it: StopDetailed) => {
             const circle: CircleMarker = Leaflet.circleMarker([it.location.lat, it.location.lon], {
@@ -186,13 +211,35 @@ export default class MapController {
             padding: [10, 10]
         });
     }
-
+    private registerListenerForVehiclePositionUpdate = (trip: Trip) => {
+        window.Echo.join(`trip.${trip.id}`)
+            .listen(".vehicle.position-updated", (data: VehiclePositionUpdate) => {
+                if (this.realtimeVehicle === null){
+                    this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
+                        radius: 9,
+                        color: '#0e0e0e',
+                        weight: 4,
+                        fillColor: '#202020',
+                        fillOpacity: 1,
+                    }).addTo(this.map!!);
+                } else {
+                    this.realtimeVehicle.removeFrom(this.map!!);
+                    this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
+                        radius: 9,
+                        color: '#0e0e0e',
+                        weight: 4,
+                        fillColor: '#202020',
+                        fillOpacity: 1,
+                    }).addTo(this.map!!);
+                }
+            });
+    }
 
     private static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
     public static setMapControllerContext = (): MapController => {
-        return setContext(MapController.KEY, new MapController());
+        return setContext(this.KEY, new MapController());
     }
     public static getMapControllerContext = () => {
-        return getContext<ReturnType<typeof this.setMapControllerContext>>(MapController.KEY);
+        return getContext<ReturnType<typeof this.setMapControllerContext>>(this.KEY);
     }
 }
