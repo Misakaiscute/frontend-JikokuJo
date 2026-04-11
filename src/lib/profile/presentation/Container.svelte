@@ -39,10 +39,10 @@
                 userController.popupShown = "register";
             }}
         ><p class="text-sm mx-2">Regisztráció</p></div>
-        {#if userController.popupShown === "login"}
-            <Login/>
-        {:else if userController.popupShown === "register"}
-            <Register/>
-        {/if}
     {/await}
+    {#if userController.popupShown === "login"}
+        <Login/>
+    {:else if userController.popupShown === "register"}
+        <Register/>
+    {/if}
 </div>

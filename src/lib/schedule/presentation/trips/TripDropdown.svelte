@@ -1,6 +1,6 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
-    import MapController from "../../../map/mapController.svelte.ts";
+    import MapController from "../../../map/presentation/mapController.svelte.ts";
     import TripSelectionController from "../tripSelectionController.svelte.ts";
     import ScheduleSearchController from "../scheduleSearchController.svelte.ts";
 

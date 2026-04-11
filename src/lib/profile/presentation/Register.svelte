@@ -76,7 +76,7 @@
                 <SubmitButton text="Regisztráció" onclick={async () => {
                     await userController.attemptRegister(firstName, lastName, email, password, passwordConfirmation);
                 }}/>
-            {:catch err: Error}
+            {:catch err}
                 <div class="flex-[0_0_4.25rem] mt-3 w-full flex justify-center items-center gap-x-1">
                     <div class="flex-[1_1_auto] min-w-0 h-full flex flex-col justify-center items-start">
                         <InputField bind:value={lastName} label="Vezetéknév" type="text" placeholder="Kis"/>

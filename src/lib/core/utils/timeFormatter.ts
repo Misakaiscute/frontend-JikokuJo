@@ -1,4 +1,8 @@
 ﻿export const timeFormatter = (minsSinceDayStart: number, withColon: boolean = true): string => {
+    if (minsSinceDayStart < 0) {
+        throw new Error("Mins since day start cannot be negative.");
+    }
+
     const hours: string = String(
         Math.floor((minsSinceDayStart % (60 * 24)) / 60)
     ).padStart(2, '0');

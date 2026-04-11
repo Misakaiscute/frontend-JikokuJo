@@ -102,23 +102,22 @@ export default class TripSelectionController {
                 });
 
             this.tripSelectRequestResult = Promise.resolve();
-
-            try {
-                this.openBroadcasting(this.selectedTrip);
-            } finally {
-                onSuccess(
-                    stops,
-                    shapes,
-                    await this.getRouteForTrip(this.selectedTrip.route_id) as Route
-                );
-            }
+            onSuccess(
+                stops,
+                shapes,
+                await this.getRouteForTrip(this.selectedTrip.route_id) as Route
+            );
         }
     }
-    private openBroadcasting = async (forTrip: Trip): Promise<void> => {
-        return new Promise(async (reject, resolve) => {
-            await this.tripsRepository.openBroadcast(forTrip)
-                .then(() => resolve)
-                .catch((err) => reject(err))
+    public openBroadcasting = async (): Promise<void> => {
+        return new Promise(async (resolve, reject) => {
+            if (this.selectedTrip === null) {
+                reject(new Error("Websocket connection couldn't be opened. Select a trip first."));
+            } else {
+                await this.tripsRepository.openBroadcast(this.selectedTrip!!)
+                    .then(() => resolve())
+                    .catch((err: Error) => reject(new Error(err.message)));
+            }
         });
     }
 
