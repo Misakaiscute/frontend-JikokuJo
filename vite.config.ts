@@ -8,9 +8,25 @@ export default defineConfig({
       svelte()
   ],
   test: {
-      environment: "jsdom"
-  },
-  resolve: process.env.VITEST
-    ? { conditions: ["browser"] }
-    : undefined
+    projects: [{
+      plugins: [svelte()],
+      resolve: process.env.VITEST
+        ? { conditions: ["browser"] }
+        : undefined,
+      test: {
+        name: "component",
+        environment: "jsdom",
+        include: ["tests/**/component/**/*.svelte.test.ts", "tests/**/component/**/*.svelte.test.js"],
+        globals: true,
+        setupFiles: ["tests/componentTest.setup.ts"]
+      }
+    },
+    {
+      test: {
+        name: "unit",
+        environment: "node",
+        include: ["tests/**/unit/**/*.test.ts", "tests/**/unit/**/*.test.js"]
+      }
+    }]
+  }
 })

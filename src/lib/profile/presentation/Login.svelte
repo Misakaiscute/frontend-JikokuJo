@@ -5,12 +5,21 @@
     import SubmitButton from "./SubmitButton.svelte";
 
     const userController: UserController = UserController.getUserControllerContext();
-    userController.loginRequestResult = Promise.resolve();
+    userController.loginRequestResult = Promise.resolve(false);
 
     let email: string = $state("");
     let password: string = $state("");
     let rememberMe: boolean = $state(false);
 </script>
+{#snippet inputs()}
+    <InputField bind:value={email} label="Email" id="email" type="text" placeholder="kispista@gmail.com"/>
+    <InputField bind:value={password} label="Jelszó" id="password" type="password"/>
+    <label class="text-sm mt-3 mb-0.5 pl-1">
+        <input type="checkbox" bind:checked={rememberMe} class="translate-y-0.5">
+        Emlékezz rám
+    </label>
+{/snippet}
+
 <!-- svelte-ignore a11y_click_events_have_key_events -->
 <div transition:fade={{duration: 200}}
     role="button" tabindex="-1"
@@ -42,33 +51,21 @@
             </div>
             {#await userController.loginRequestResult}
                 <div class="relative flex-[1_1_auto] w-full flex flex-col items-start justify-center">
-                    <InputField bind:value={email} label="Email" type="text" placeholder="kispista@gmail.com"/>
-                    <InputField bind:value={password} label="Jelszó" type="password"/>
-                    <label class="text-sm mt-3 mb-0.5 pl-1">
-                        <input type="checkbox" bind:checked={rememberMe} class="translate-y-0.5">
-                        Emlékezz rám
-                    </label>
+                    {@render inputs()}
                     <SubmitButton text="Bejelentkezés"/>
                     <div class="absolute top-0 left-0 h-full w-full bg-zinc-900/80 rounded-sm flex justify-center items-center">
-                        <div class="flex-[0_0_50%] aspect-square loader"></div>
+                        <span id="loader" class="flex-[0_0_50%] aspect-square"></span>
                     </div>
                 </div>
-            {:then _}
-                <InputField bind:value={email} label="Email" type="text" placeholder="kispista@gmail.com"/>
-                <InputField bind:value={password} label="Jelszó" type="password"/>
-                <label class="text-sm mt-3 mb-0.5 pl-1">
-                    <input type="checkbox" bind:checked={rememberMe} class="translate-y-0.5">
-                    Emlékezz rám
-                </label>
+            {:then isSuccessful}
+                {@render inputs()}
+                {#if isSuccessful}
+                    <p id="success-msg" class="flex-[0_0_auto] w-full mt-3 px-1 text-green-800 break-all text-center">Sikeres bejelentkezés!</p>
+                {/if}
                 <SubmitButton text="Bejelentkezés" onclick={async () => { await userController.attemptLogin(email, password, rememberMe)}}/>
-            {:catch err: Error}
-                <InputField bind:value={email} label="Email" type="text" placeholder="kispista@gmail.com"/>
-                <InputField bind:value={password} label="Jelszó" type="password"/>
-                <label class="text-sm mt-3 mb-0.5 pl-1">
-                    <input type="checkbox" bind:checked={rememberMe} class="translate-y-0.5">
-                    Emlékezz rám
-                </label>
-                <p class="flex-[0_0_auto] w-full mt-3 px-1 text-red-800 break-all text-center">{err.message}</p>
+            {:catch err}
+                {@render inputs()}
+                <p id="error-msg" class="flex-[0_0_auto] w-full mt-3 px-1 text-red-800 break-all text-center">{err.message}</p>
                 <SubmitButton text="Bejelentkezés" onclick={async () => { await userController.attemptLogin(email, password, rememberMe)}}/>
             {/await}
         </div>

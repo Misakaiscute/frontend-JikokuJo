@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*credit: https://cssloaders.github.io*/
-.loader {
+#loader {
     border-radius: 50%;
     display: inline-block;
     border-top: 3px solid #FFF;
