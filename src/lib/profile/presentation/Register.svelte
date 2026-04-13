@@ -36,8 +36,7 @@
         userController.popupShown = null;
     }}
 >
-    <div
-        role="button" tabindex="-1"
+    <div id="close-btn" role="button" tabindex="-1"
         class="h-[clamp(20rem,80svh,36rem)] w-[clamp(12rem,40svw,24rem)] rounded-t-md rounded-b-lg bg-white flex flex-col justify-start items-start pointer-events-auto"
         onclick={(e) => e.stopPropagation()}
     >
@@ -46,8 +45,7 @@
                 <div class="flex-[1_1_auto] h-full flex justify-start items-center">
                     <p>Regisztráció</p>
                 </div>
-                <button
-                    aria-label="close-panel"
+                <button aria-label="close-panel" id="close-btn"
                     class="group flex-[0_0_1.8rem] aspect-square rounded-full bg-zinc-200 hover:bg-zinc-800 hover:cursor-pointer transition-colors duration-300"
                     onclick={() => {
                         userController.popupShown = null;

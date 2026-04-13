@@ -36,7 +36,7 @@ export default class ActionController {
         }
     }
 
-    private static readonly KEY: symbol = Symbol("ACTION_CONTROLLER_KEY");
+    public static readonly KEY: symbol = Symbol("ACTION_CONTROLLER_KEY");
     public static setActionControllerContext = (
         onEmptyURL: () => Promise<void>,
         onQueryableNamePresent: (queryableName: string) => Promise<void>,

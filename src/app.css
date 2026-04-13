@@ -19,7 +19,7 @@
     }
 }
 
-.loading-shimmer {
+#loading-shimmer {
     background-color: #ffffff;
     animation: shimmer 2s ease-in-out infinite;
 }

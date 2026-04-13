@@ -26,8 +26,7 @@
     class="z-50 absolute top-0 left-0 h-svh w-svw bg-zinc-900/80 flex flex-col justify-center items-center pointer-events-auto"
     onclick={() => { userController.popupShown = null; }}
 >
-    <div
-        role="button" tabindex="-1"
+    <div role="button" tabindex="-1"
         class="h-[clamp(20rem,80svh,36rem)] w-[clamp(12rem,40svw,24rem)] rounded-t-md rounded-b-lg bg-white flex flex-col justify-start items-start pointer-events-auto"
         onclick={(e) => e.stopPropagation()}
     >
@@ -36,8 +35,7 @@
                 <div class="flex-[1_1_auto] h-full flex justify-start items-center">
                     <p>Bejelentkezés</p>
                 </div>
-                <button
-                    aria-label="close-panel"
+                <button aria-label="close-panel" id="close-btn"
                     class="group flex-[0_0_1.8rem] aspect-square rounded-full bg-zinc-200 hover:bg-zinc-800 hover:cursor-pointer transition-colors duration-300"
                     onclick={() => {
                         userController.popupShown = null;

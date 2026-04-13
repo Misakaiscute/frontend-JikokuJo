@@ -62,7 +62,7 @@
             tripSelectionController.searchTrips(scheduleSearchController.selectedQueryable!!, scheduleSearchController.date);
             await tripSelectionController.tripRequestResult?.then(() => {
                 tripFound = tripSelectionController.trips.find((it: Trip) => it.id === tripId) ?? null;
-            })
+            });
 
             if (tripFound !== null){
                 actionController.currAction = "tripSelection";

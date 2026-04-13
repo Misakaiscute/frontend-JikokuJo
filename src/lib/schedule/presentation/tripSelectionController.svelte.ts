@@ -124,7 +124,7 @@ export default class TripSelectionController {
     public static readonly DATETIME_QP_KEY: string = "at";
     public static readonly TRIP_QP_KEY: string = "trip";
 
-    private static readonly KEY: symbol = Symbol("TRIP_SELECTION_CONTROLLER_KEY");
+    public static readonly KEY: symbol = Symbol("TRIP_SELECTION_CONTROLLER_KEY");
     public static setTripSelectionControllerContext = (
         queryablesRepository: QueryablesRepository,
         tripsRepository: TripsRepository,

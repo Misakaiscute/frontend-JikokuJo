@@ -232,7 +232,7 @@ export default class MapController {
         this.realtimeVehicle = null;
     }
 
-    private static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
+    public static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
     public static setMapControllerContext = (): MapController => {
         return setContext(this.KEY, new MapController());
     }

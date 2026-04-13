@@ -1,4 +1,4 @@
-﻿import {describe, expect, it} from "vitest";
+﻿import {beforeEach, describe, expect, it} from "vitest";
 import UserRepositoryMock from "../mock/userRepositoryMock.ts";
 import Component from "../../../src/lib/profile/presentation/Register.svelte";
 import {fireEvent, render, screen} from "@testing-library/svelte";
@@ -6,43 +6,36 @@ import UserController from "../../../src/lib/profile/presentation/userController
 import {tick} from "svelte";
 
 describe("Register component", () => {
+    let container!: HTMLElement;
+    let userController!: UserController;
     const userRepository = new UserRepositoryMock();
     userRepository.userLoggedIn = false;
-    it("should show inputs when its promise is resolved, register button not yet been clicked", async () => {
-        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
-        const { container } = render(Component, {
-            context: context,
-        });
-        const userController: UserController = context.get(UserController.KEY) as UserController;
-        userController.isLoggedIn.catch(() => {});
 
+    beforeEach(async () => {
+        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
+        ({ container } = render(Component, {
+            context: context,
+        }));
+        userController = context.get(UserController.KEY) as UserController;
+        userController.isLoggedIn.catch(() => {});
+        await tick();
+    });
+
+    it("should show inputs when its promise is resolved, register button not yet been clicked", async () => {
         userController.registerRequestResult = Promise.resolve(false);
         const inputs: NodeListOf<HTMLElement> = container.querySelectorAll("input");
         expect(inputs.length).toBe(5);
         inputs.forEach((input: HTMLElement) => expect(input).toBeInTheDocument());
     });
     it("should show loader when its promise is resolving", async () => {
-        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
-        const { container } = render(Component, {
-            context: context,
-        });
-        const userController: UserController = context.get(UserController.KEY) as UserController;
-        userController.isLoggedIn.catch(() => {});
-
         userController.registerRequestResult = new Promise(() => {});
+        await tick();
+
         const loadingSpinner: HTMLElement | null = container.querySelector("#loader");
         expect(loadingSpinner).toBeInTheDocument();
     });
 
     it("should display validator error when form sending errors out", async () => {
-        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
-        const { container } = render(Component, {
-            context: context
-        });
-        const userController: UserController = context.get(UserController.KEY) as UserController;
-        userController.isLoggedIn.catch(() => {});
-        await tick();
-
         userRepository.mockRegisterSuccess = true;
         const registerBtn: HTMLElement | null = container.querySelector("#submit");
         registerBtn?.click();
@@ -54,14 +47,6 @@ describe("Register component", () => {
         expect(errorMsg).toBeInTheDocument();
     });
     it("should display network/repository error when form sending errors out", async () => {
-        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
-        const { container } = render(Component, {
-            context: context
-        });
-        const userController: UserController = context.get(UserController.KEY) as UserController;
-        userController.isLoggedIn.catch(() => {});
-        await tick();
-
         userRepository.mockRegisterSuccess = false;
         await fireEvent.input(container.querySelector("#last-name")!, { target: { value: "Test" } });
         await fireEvent.input(container.querySelector("#first-name")!, { target: { value: "Elek" } });
@@ -78,13 +63,6 @@ describe("Register component", () => {
         expect(errorMsg).toBeInTheDocument();
     });
     it("should display success message when form sending succeeds", async () => {
-        const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
-        const { container } = render(Component, {
-            context: context,
-        });
-        const userController: UserController = context.get(UserController.KEY) as UserController;
-        userController.isLoggedIn.catch(() => {});
-
         userRepository.mockRegisterSuccess = true;
         await fireEvent.input(container.querySelector("#last-name")!, { target: { value: 'Test' } });
         await fireEvent.input(container.querySelector("#first-name")!, { target: { value: 'Elek' } });
