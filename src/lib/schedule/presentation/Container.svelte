@@ -17,7 +17,7 @@
     import TripDropdownItem from "./trips/TripDropdownItem.svelte";
 
     import DropdownExpanderArrow from "./DropdownExpanderArrow.svelte";
-    import NavigationContainer from "./NavigationContainer.svelte";
+    import ActionSelector from "./ActionSelector.svelte";
 
     import type TripsRepository from "../data/repository/tripsRepository.ts";
     import TripsRepositoryImpl from "../data/repository/tripsRepositoryImpl.ts";
@@ -32,9 +32,9 @@
     const scheduleSearchController: ScheduleSearchController = ScheduleSearchController.setScheduleSearchControllerContext(queryablesRepository);
     const tripSelectionController: TripSelectionController = TripSelectionController.setTripSelectionControllerContext(queryablesRepository, tripsRepository);
     const actionController: ActionController = ActionController.setActionControllerContext(
-        async () => { await scheduleSearchController.fetchQueryables(); },
+        async () => { scheduleSearchController.fetchQueryables(); },
         async (queryableName: string) => {
-            await scheduleSearchController.fetchQueryables();
+            scheduleSearchController.fetchQueryables();
             await scheduleSearchController.queryablesFetchRequestResult?.then(() => {
                 queryablesRepository.getQueryables().then((queryables: Queryable[]) => {
                     queryables.forEach((it: Queryable) => {
@@ -89,13 +89,13 @@
 </script>
 <div class="flex w-full h-auto max-[600px]:p-1">
     <nav class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 mr-1 pointer-events-auto">
-        <NavigationContainer/>
+        <ActionSelector/>
     </nav>
     <div class="min-w-72 w-[50svw] max-[600px] h-auto flex flex-col max-[600px]:flex-[1_0_auto] max-[600px]:min-w-60">
         {#if actionController.currAction === "queryableSearch"}
-            <div in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
-                 on:introend={() => { scheduleSearchController.dropdownShown = true; }}
-                 class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+            <div id="queryable-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
+                on:introend={() => { scheduleSearchController.dropdownShown = true; }}
+                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <QueryableSearchBar/>
                 <DateTimeSelector/>
                 <QueryableDropdown/>
@@ -104,9 +104,9 @@
                 <DropdownExpanderArrow/>
             </div>
         {:else if actionController.currAction === "tripSelection"}
-            <div in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
-                 on:introend={() => { tripSelectionController.dropdownShown = true; }}
-                 class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+            <div id="trip-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
+                on:introend={() => { tripSelectionController.dropdownShown = true; }}
+                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <TripDropdownItem trip={tripSelectionController.selectedTrip}/>
                 <TripDropdown/>
             </div>

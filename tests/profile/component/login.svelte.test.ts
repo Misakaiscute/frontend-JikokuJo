@@ -23,6 +23,8 @@ describe("Login component", () => {
 
     it("should show inputs when its promise is resolved, login button not yet been clicked", async () => {
         userController.loginRequestResult = Promise.resolve(false);
+        await tick();
+
         const inputs: NodeListOf<HTMLElement> = container.querySelectorAll("input");
         expect(inputs.length).toBe(3);
         inputs.forEach((input: HTMLElement) => expect(input).toBeInTheDocument());
@@ -43,7 +45,7 @@ describe("Login component", () => {
         await userController.loginRequestResult.catch(() => {});
         await tick();
 
-        const errorMsg = container.querySelector("#error-msg");
+        const errorMsg: HTMLElement | null = container.querySelector("#error-msg");
         expect(errorMsg).toBeInTheDocument();
     });
     it("should display network/repository error when form sending errors out", async () => {
@@ -56,7 +58,7 @@ describe("Login component", () => {
         await userController.loginRequestResult.catch(() => {});
         await tick();
 
-        const errorMsg = container.querySelector("#error-msg");
+        const errorMsg: HTMLElement | null = container.querySelector("#error-msg");
         expect(errorMsg).toBeInTheDocument();
     });
     it("should display success message when form sending succeeds", async () => {

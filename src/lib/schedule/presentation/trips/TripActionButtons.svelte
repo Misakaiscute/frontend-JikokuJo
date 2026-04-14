@@ -26,7 +26,7 @@
 {#if tripSelectionController.selectedTrip !== null}
     <div transition:fade={{ duration: 300 }} class="flex-[0_0_auto] w-full flex flex-col gap-y-0.5 justify-center items-center">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <div role="button" tabindex="-1"
+        <div id="share-btn" role="button" tabindex="-1"
              class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
              hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200"
              onclick={onCopyLinkToClipboard}
@@ -38,7 +38,7 @@
         </div>
         <!-- svelte-ignore a11y_click_events_have_key_events -->
         {#await userController.isLoggedIn then _}
-            <div role="button" tabindex="-1"
+            <div id="track-realtime-btn" role="button" tabindex="-1"
                  class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
                       hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200"
                  onclick={onTrackInRealtimeBtnClick}
@@ -54,7 +54,7 @@
                 {/if}
             </div>
         {:catch _}
-            <div class="flex-[0_0_30px] flex justify-center items-center w-full bg-zinc-200 border-2 rounded-sm border-zinc-400">
+            <div id="track-realtime-btn" class="flex-[0_0_30px] flex justify-center items-center w-full bg-zinc-200 border-2 rounded-sm border-zinc-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="flex-[0_0_75%] aspect-square" width="16" height="16" viewBox="0 0 16 16">
                     <path fill="currentColor" d="M3.05 3.05a.75.75 0 0 1 1.06 1.06a5.5 5.5 0 0 0 0 7.778a.75.75 0 0 1-1.06 1.06a7 7 0 0 1 0-9.9m8.838 0a.75.75 0 0 1 1.06 0a7 7 0 0 1 0 9.9a.75.75 0 1 1-1.06-1.061a5.5 5.5 0 0 0 0-7.778a.75.75 0 0 1 0-1.061M5.174 5.172a.75.75 0 1 1 1.06 1.06a2.5 2.5 0 0 0 0 3.536a.75.75 0 0 1-1.06 1.06a4 4 0 0 1 0-5.656m4.596 0a.75.75 0 0 1 1.06 0a4 4 0 0 1 0 5.656a.75.75 0 1 1-1.06-1.06a2.5 2.5 0 0 0 0-3.535a.75.75 0 0 1 0-1.061M8 7a1 1 0 1 1 0 2a1 1 0 0 1 0-2" />
                 </svg>

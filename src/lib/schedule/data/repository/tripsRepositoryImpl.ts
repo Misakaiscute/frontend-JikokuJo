@@ -10,8 +10,8 @@ import {timeFormatter} from "../../../core/utils/timeFormatter.ts";
 import axios, {type AxiosError} from "axios";
 
 export default class TripsRepositoryImpl implements TripsRepository {
-    public shapes: Map<string, ApiResult<RoutePathPoint[] | null>> = new Map<string, ApiResult<RoutePathPoint[] | null>>();
-    public stops: Map<string, ApiResult<StopDetailed[] | null>> = new Map<string, ApiResult<StopDetailed[] | null>>();
+    private shapes: Map<string, ApiResult<RoutePathPoint[] | null>> = new Map<string, ApiResult<RoutePathPoint[] | null>>();
+    private stops: Map<string, ApiResult<StopDetailed[] | null>> = new Map<string, ApiResult<StopDetailed[] | null>>();
 
     async getStops(trip: Trip): Promise<StopDetailed[]> {
         if (this.stops.has(trip.id) && this.stops.get(trip.id)!!.kind === "fulfill") {

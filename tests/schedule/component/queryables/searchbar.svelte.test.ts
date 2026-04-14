@@ -29,7 +29,7 @@ describe("Searchbar component", () => {
     it("should show error and retry button if initial data fetching fails", async () => {
         queryablesRepository.mockGetQueryablesSuccess = false;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         scheduleSearchController.queryablesFetchRequestResult.catch(() => {});
         await tick();
 
@@ -41,7 +41,7 @@ describe("Searchbar component", () => {
     it("should retry fetching on retry button click", async () => {
         queryablesRepository.mockGetQueryablesSuccess = false;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         scheduleSearchController.queryablesFetchRequestResult.catch(() => {});
         await tick();
         queryablesRepository.mockGetQueryablesSuccess = null;
@@ -55,7 +55,7 @@ describe("Searchbar component", () => {
     it("should show no button if no queryable is selected and search string is empty", async () => {
         queryablesRepository.mockGetQueryablesSuccess = true;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         await tick();
 
         const searchbarContainer: HTMLElement | null = container.querySelector("#searchbar")?.parentElement as HTMLElement;
@@ -64,7 +64,7 @@ describe("Searchbar component", () => {
     it("should show clear button if searchbar has text, but no queryable is selected", async () => {
         queryablesRepository.mockGetQueryablesSuccess = true;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         await tick();
         await fireEvent.input(container.querySelector("#searchbar")!, { target: { value: "smh" } });
         await tick();
@@ -75,7 +75,7 @@ describe("Searchbar component", () => {
     it("should clear search string on clear button click", async () => {
         queryablesRepository.mockGetQueryablesSuccess = true;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         await tick();
         await fireEvent.input(container.querySelector("#searchbar")!, { target: { value: "smh" } });
         await tick();
@@ -88,7 +88,7 @@ describe("Searchbar component", () => {
     it("should show search button if searchbar has text and queryable is selected", async () => {
         queryablesRepository.mockGetQueryablesSuccess = true;
 
-        await scheduleSearchController.fetchQueryables();
+        scheduleSearchController.fetchQueryables();
         await tick();
         await fireEvent.input(container.querySelector("#searchbar")!, { target: { value: "smh" } });
         scheduleSearchController.selectedQueryable = {

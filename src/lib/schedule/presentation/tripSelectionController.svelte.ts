@@ -40,7 +40,7 @@ export default class TripSelectionController {
             }
         }
 
-    public tripRequestResult: Promise<void> | null = $state(null);
+    public tripRequestResult: Promise<void> = $state(new Promise(() => {}));
     public searchTrips = (forQueryable: Queryable, forDate: Date): void => {
         this.tripRequestResult = new Promise((resolve, reject) => {
             this.tripsRepository.getTrips(forQueryable, forDate)
@@ -77,38 +77,28 @@ export default class TripSelectionController {
         });
     }
 
-    public tripSelectRequestResult: Promise<void> | null = $state(null);
+    public tripSelectRequestResult: Promise<void> = $state(new Promise(() => {}));
     public onTripSelect = async (
         onSuccess: ((stops: StopDetailed[], shapes: RoutePathPoint[], routeAssociated: Route) => void)
     ): Promise<void> => {
         if (this.selectedTrip !== null) {
-            let stops: StopDetailed[] = [];
-            let shapes: RoutePathPoint[] = [];
-            await this.tripsRepository.getStops(this.selectedTrip)
-                .then((res: StopDetailed[]) => {
-                    stops = res;
-                })
-                .catch((err: Error) => {
-                    this.tripSelectRequestResult = Promise.reject(err.message);
-                    return;
-                });
-            await this.tripsRepository.getShapes(this.selectedTrip)
-                .then((res: RoutePathPoint[]) => {
-                    shapes = res;
-                })
-                .catch((err: Error) => {
-                    this.tripSelectRequestResult = Promise.reject(err.message);
-                    return;
-                });
-
-            this.tripSelectRequestResult = Promise.resolve();
-            onSuccess(
-                stops,
-                shapes,
-                await this.getRouteForTrip(this.selectedTrip.route_id) as Route
-            );
+            try{
+                const [stops, shapes] = await Promise.all([
+                    this.tripsRepository.getStops(this.selectedTrip),
+                    this.tripsRepository.getShapes(this.selectedTrip)
+                ]);
+                this.tripSelectRequestResult = Promise.resolve();
+                onSuccess(
+                    stops,
+                    shapes,
+                    await this.getRouteForTrip(this.selectedTrip.route_id) as Route
+                );
+            } catch (err: any) {
+                this.tripSelectRequestResult = Promise.reject((err as Error).message);
+            }
         }
     }
+
     public openBroadcasting = async (): Promise<void> => {
         return new Promise(async (resolve, reject) => {
             if (this.selectedTrip === null) {

@@ -15,6 +15,12 @@
         actionController.currAction = 'tripSelection';
         tripSelectionController.searchTrips(scheduleSearchController.selectedQueryable!!, scheduleSearchController.date);
     }
+    const onClear = () => {
+        scheduleSearchController.searchString = "";
+    }
+    const onRetry = () => {
+        scheduleSearchController.fetchQueryables();
+    }
 </script>
 {#await scheduleSearchController.queryablesFetchRequestResult}
     <div id="loading-shimmer" class="flex h-10 w-full items-center rounded-md"></div>
@@ -36,7 +42,7 @@
         {:else if trailingActionClear}
             <button aria-label="clear" id="clear-btn"
                 class="mx-2 h-[70%] flex-none text-zinc-400 hover:transition-colors duration-200 hover:cursor-pointer hover:text-zinc-600"
-                onclick={() => { scheduleSearchController.searchString = ''; }}>
+                onclick={onClear}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-full aspect-square" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6" />
                     <path d="M19 6l-1 14H6L5 6" />
@@ -53,7 +59,7 @@
         </p>
         <button aria-label="retry" id="retry-btn"
             class="mx-2 h-[70%] flex-none text-zinc-400 hover:transition-colors duration-200 hover:cursor-pointer hover:text-zinc-600"
-            onclick={() => { scheduleSearchController.fetchQueryables(); }}>
+            onclick={onRetry}>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-full aspect-square" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path d="M3 4v6h6" />
                 <path d="M3.51 15a9 9 0 1 0 .49-4.95" />

@@ -25,15 +25,15 @@ export default class ScheduleSearchController {
                 this.selectedQueryable = null;
             }
 
-            if (this.searchDebounce !== undefined) {
-                clearTimeout(this.searchDebounce);
+            if (this._searchDebounce !== undefined) {
+                clearTimeout(this._searchDebounce);
             }
-            this.searchDebounce = setTimeout(async () => {
-                this.filteredQueryables = await this.debounceHandler()
+            this._searchDebounce = setTimeout(async () => {
+                this.filteredQueryables = await this.debounceHandler();
             }, 500);
         }
         
-    private searchDebounce: ReturnType<typeof setTimeout> | undefined = undefined;
+    private _searchDebounce: ReturnType<typeof setTimeout> | undefined = undefined;
     private debounceHandler = async (): Promise<Queryable[]> => {
         let queryables: Queryable[] | null = null;
         await this.queryablesRepository.getQueryables().then((it: Queryable[]) => queryables = it);
@@ -82,9 +82,9 @@ export default class ScheduleSearchController {
     public dropdownShown: boolean = $state(true);
 
     public queryablesFetchRequestResult: Promise<void> = $state(new Promise(() => {}));
-    public fetchQueryables = async (): Promise<void> => {
-        this.queryablesFetchRequestResult = new Promise((resolve, reject) => {
-            this.queryablesRepository.getQueryables()
+    public fetchQueryables = (): void => {
+        this.queryablesFetchRequestResult = new Promise(async (resolve, reject) => {
+            await this.queryablesRepository.getQueryables()
                 .then(() => resolve())
                 .catch((err: Error) => reject(err.message));
         });
