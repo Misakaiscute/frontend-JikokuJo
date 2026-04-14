@@ -1,22 +1,23 @@
 ﻿import Leaflet, {CircleMarker, type LatLngExpression, type LatLngTuple, Polyline} from "leaflet";
-import type {StopDetailed} from "../schedule/data/model/stopDetailed.ts";
-import type {Location, RoutePathPoint} from "../schedule/data/model/location.ts";
-import type {Queryable, Route} from "../schedule/data/model/queryable.ts";
-import type {Trip} from "../schedule/data/model/trip.ts";
+import type {StopDetailed} from "../../schedule/data/model/stopDetailed.ts";
+import type {Location, RoutePathPoint} from "../../schedule/data/model/location.ts";
+import type {Queryable, Route} from "../../schedule/data/model/queryable.ts";
+import type {Trip} from "../../schedule/data/model/trip.ts";
 import {getContext, setContext} from "svelte";
-import {findCenterPoint, findSwitchingPoint} from "./mapUtils.ts";
-import type { VehiclePositionUpdate } from "./data/model/vehiclePositionUpdate.js";
+import type { VehiclePositionUpdate } from "../data/model/vehiclePositionUpdate.js";
+import MapUtils from "../utils/mapUtils.ts";
 
 export default class MapController {
     private map: Leaflet.Map | undefined;
+    private mapUtils: MapUtils = new MapUtils();
+
     private tripBeforeStopPolyline: Polyline | null = null;
     private tripAfterStopPolyline: Polyline | null = null;
     private tripBeforeStopPolylineShadow: Polyline | null = null;
     private tripAfterStopPolylineShadow: Polyline | null = null;
     private tripStops: CircleMarker[] = [];
 
-    private currentTrip: Trip | null = null;
-    private realtimeVehicle: CircleMarker | null = null;
+    public realtimeVehicle: CircleMarker | null = $state(null);
 
     public isTripLoading: boolean = $state(false);
 
@@ -34,7 +35,7 @@ export default class MapController {
         }).addTo(this.map);
     }
 
-    public removeTrip = () => {
+    public removeTrip = (trip: Trip) => {
         this.tripStops.forEach((it: CircleMarker) => it.removeFrom(this.map!!));
         this.tripStops = [];
         this.tripAfterStopPolyline?.removeFrom(this.map!!);
@@ -45,13 +46,8 @@ export default class MapController {
         this.tripAfterStopPolylineShadow = null;
         this.tripBeforeStopPolylineShadow?.removeFrom(this.map!!);
         this.tripBeforeStopPolylineShadow = null;
-        
-        if (this.currentTrip !== null){
-            window.Echo.leave(`trip.${this.currentTrip.id}`);
-        }
-        this.currentTrip = null;
-        this.realtimeVehicle = null;
-        
+
+        this.unregisterListenerForVehiclePositionUpdate(trip);
     }
 
     public displayTrip = (
@@ -61,9 +57,8 @@ export default class MapController {
         routeAssociated: Route,
         forQueryable: Queryable
     ): void => {
-        this.removeTrip();
+        this.removeTrip(trip);
 
-        //this.currentTrip = trip;
         switch(forQueryable.kind){
             case "route":
                 this.displayTripForRoute(shapes, stops, routeAssociated);
@@ -72,16 +67,10 @@ export default class MapController {
                 const stopSelected: StopDetailed = stops.find((it: StopDetailed) => {
                     return forQueryable.ids.find((id: string) => it.id === id);
                 })!!;
-                const switchingPointIndex: number = findSwitchingPoint(stopSelected, shapes);
+                const switchingPointIndex: number = this.mapUtils.findSwitchingPoint(stopSelected, shapes);
                 this.displayTripForStop(stopSelected, switchingPointIndex, shapes, stops, routeAssociated);
                 break;
         }
-        try {
-            this.registerListenerForVehiclePositionUpdate(trip);
-        } catch(e) {
-            console.log(e);
-        }
-
         this.alignToTripCenter(shapes);
         this.zoomOutToFitRoute(shapes);
     }
@@ -198,8 +187,9 @@ export default class MapController {
             circle.addTo(this.map!!);
         });
     }
+
     private alignToTripCenter = (pathPoints: RoutePathPoint[]): void => {
-        const centerPoint: Location = findCenterPoint(pathPoints);
+        const centerPoint: Location = this.mapUtils.findCenterPoint(pathPoints);
         this.map!!.setView([centerPoint.lat, centerPoint.lon] as LatLngExpression);
     }
     private zoomOutToFitRoute = (pathPoints: RoutePathPoint[]): void => {
@@ -211,7 +201,7 @@ export default class MapController {
             padding: [10, 10]
         });
     }
-    private registerListenerForVehiclePositionUpdate = (trip: Trip) => {
+    public registerListenerForVehiclePositionUpdate = (trip: Trip) => {
         window.Echo.join(`trip.${trip.id}`)
             .listen(".vehicle.position-updated", (data: VehiclePositionUpdate) => {
                 if (this.realtimeVehicle === null){
@@ -234,8 +224,15 @@ export default class MapController {
                 }
             });
     }
+    public unregisterListenerForVehiclePositionUpdate = (trip: Trip) => {
+        if (this.realtimeVehicle !== null){
+            window.Echo.leave(`trip.${trip.id}`);
+            this.realtimeVehicle.removeFrom(this.map!!);
+        }
+        this.realtimeVehicle = null;
+    }
 
-    private static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
+    public static readonly KEY: symbol = Symbol("MAP_CONTROLLER_KEY");
     public static setMapControllerContext = (): MapController => {
         return setContext(this.KEY, new MapController());
     }

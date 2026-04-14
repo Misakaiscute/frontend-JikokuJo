@@ -1,7 +1,4 @@
-﻿import {Browser} from "leaflet";
-import win = Browser.win;
-
-export default class URLParamController {
+﻿export default class URLParamController {
     public static set = (key: string, value: string): void => {
         const url = new URLSearchParams(window.location.search);
         url.set(key, value);
@@ -10,7 +7,7 @@ export default class URLParamController {
 
     public static get = (param: string): string | null => {
         const url = new URLSearchParams(window.location.search);
-        return url.get(param) ?? null;
+        return url.get(param);
     }
 
     public static remove = (param: string): void => {
@@ -28,11 +25,9 @@ export default class URLParamController {
         return url.has(param);
     }
 
-    private static replaceURL = (newURL: string) => {
-        if (newURL === ""){
-            window.history.replaceState({}, "",  newURL);
-        } else {
-            window.history.replaceState({}, "", '?' + newURL);
-        }
+    private static replaceURL = (newUrl: string) => {
+        const finalUrl = newUrl ? '?' + newUrl : '';
+
+        window.history.replaceState({}, "", finalUrl || window.location.pathname);
     }
 }

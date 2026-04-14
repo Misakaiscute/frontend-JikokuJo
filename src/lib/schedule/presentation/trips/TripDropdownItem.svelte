@@ -17,10 +17,9 @@
     });
 </script>
 {#if trip !== null}
-    <div class="flex-[1_0_auto] max-h-16 w-full my-0.25 bg-white rounded-md flex items-center">
+    <div id="trip-item" class="flex-[1_0_auto] max-h-16 w-full my-0.25 bg-white rounded-md flex items-center">
         <!-- svelte-ignore a11y_click_events_have_key_events -->
-        <div
-            role="button" tabindex="0"
+        <div role="button" tabindex="0"
             aria-label="{trip.headsign}"
             style="--route-color: {'#' + (routeAssociated?.color ?? '000000')}"
             class="flex-[1_0_auto] w-full px-1 grid grid-cols-5 grid-rows-2 gap-0.5 rounded-md border-2 border-[var(--route-color)]
@@ -39,7 +38,7 @@
         </div>
     </div>
 {:else}
-    <div class="h-16 w-full my-0.25 bg-white border-2 border-zinc-200 rounded-md flex items-center">
+    <div id="trip-item" class="h-16 w-full my-0.25 bg-white border-2 border-zinc-200 rounded-md flex items-center">
         <div class="h-full w-full px-1 flex items-center justify-start truncate">
             Nincsen még indulás kiválasztva.
         </div>

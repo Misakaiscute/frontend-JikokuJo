@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*credit: https://cssloaders.github.io*/
-.loader {
+#loader {
     border-radius: 50%;
     display: inline-block;
     border-top: 3px solid #FFF;
@@ -19,7 +19,7 @@
     }
 }
 
-.loading-shimmer {
+#loading-shimmer {
     background-color: #ffffff;
     animation: shimmer 2s ease-in-out infinite;
 }
