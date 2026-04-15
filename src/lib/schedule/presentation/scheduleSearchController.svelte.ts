@@ -79,6 +79,8 @@ export default class ScheduleSearchController {
         }
 
     public date: Date = $state(new Date(Date.now()));
+    public dateTimePickerDropdown: "date" | "time" | null = $state(null);
+
     public dropdownShown: boolean = $state(true);
 
     public queryablesFetchRequestResult: Promise<void> = $state(new Promise(() => {}));

@@ -58,7 +58,7 @@
 {#if scheduleSearchController.selectedQueryable !== null && tripSelectionController.selectedTrip !== null}
     <div id="to-trip-action" transition:fade={{ duration: 300 }} role="button" tabindex="-1" title="{tripSelectionController.selectedTrip.headsign} - {route?.route_short_name}"
         style="--route-color: {'#' + (route?.color ?? '000000')}"
-        class="flex-[0_1_auto] max-h-[40svh] w-full py-2 rounded-md border-2 border-[var(--route-color)] flex items-center justify-center
+        class="flex-[0_1_auto] max-h-[40svh] w-full py-2 rounded-md border-2 border-[var(--route-color)] flex flex-col items-center justify-center
               bg-white transition-all duration-200 hover: hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)]"
         onclick={onTripNavClick} onkeydown={() => {}}
     >
