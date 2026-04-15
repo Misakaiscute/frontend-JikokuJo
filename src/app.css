@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
 /*credit: https://cssloaders.github.io*/
+
+body {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.text-selectable {
+    -webkit-user-select: auto;
+    user-select: auto;
+}
+
+.disable-scrollbars::-webkit-scrollbar {
+    background: transparent;
+    width: 0px;
+}
+
+.disable-scrollbars {
+    scrollbar-width: none;
+}
+
 #loader {
     border-radius: 50%;
     display: inline-block;

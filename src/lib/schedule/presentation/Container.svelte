@@ -10,7 +10,7 @@
     import MapController from "../../map/presentation/mapController.svelte.ts";
 
     import QueryableSearchBar from "./queryables/QueryableSearchBar.svelte";
-    import DateTimeSelector from "./queryables/DateTimeSelector.svelte";
+    import DateTimeContainer from "./queryables/datetimepicker/Container.svelte";
     import QueryableDropdown from "./queryables/QueryableDropdown.svelte";
 
     import TripDropdown from "./trips/TripDropdown.svelte";
@@ -97,7 +97,7 @@
                 on:introend={() => { scheduleSearchController.dropdownShown = true; }}
                 class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <QueryableSearchBar/>
-                <DateTimeSelector/>
+                <DateTimeContainer/>
                 <QueryableDropdown/>
             </div>
             <div in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }} class="z-0 h-full w-full pointer-events-none">
