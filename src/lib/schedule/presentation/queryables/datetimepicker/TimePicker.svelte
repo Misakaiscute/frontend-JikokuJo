@@ -18,7 +18,6 @@
         }
     }
 
-
     const onClose = () => { scheduleSearchController.dateTimePickerDropdown = null; };
     const onSetTime = (timeMin: number) => {
         const newTime = new Date();
@@ -32,12 +31,17 @@
 
         onClose();
     }
-    const onSetNow = () => { onSetTime(dateHelpers(Date.now()).dayInMinutes()); }
+    const onSetNow = () => {
+        if (dateHelpers(Date.now()).isPastDay(scheduleSearchController.date)) {
+            scheduleSearchController.date = new Date(Date.now());
+        }
+        onSetTime(dateHelpers(Date.now()).dayInMinutes());
+    }
 </script>
 
 {#snippet timeSelectorButton(timeMin: number)}
     <div id="time-selector-item" role="button" tabindex="0"
-        class="flex-[1_1_3rem] h-8 flex justify-center items-center bg-white border-2 border-white rounded-sm
+        class="flex-[1_1_24%] h-8 flex justify-center items-center bg-white border-2 border-white rounded-sm
                hover:border-zinc-800 transition-colors duration-200 hover:cursor-pointer"
         onclick={() => onSetTime(timeMin)} onkeydown={() => {}}
     >
@@ -48,7 +52,7 @@
 <div in:slide={{ duration: 200, delay: 150 }} out:slide={{ duration: 100 }}
      class="flex-[0_0_auto] w-full flex items-center justify-center bg-zinc-200 rounded-b-sm"
 >
-    <div id="time-selectors" class="flex-[1_1_auto] h-24 ml-0.5 my-0.5 flex flex-wrap gap-0.5 justify-start items-center overflow-y-scroll disable-scrollbars">
+    <div id="time-selectors" class="flex-[1_1_auto] h-auto max-h-[6.25rem] ml-0.5 my-0.5 flex flex-wrap gap-0.5 justify-start items-start overflow-y-scroll disable-scrollbars">
         {#each availableTimeMins as timeMin}
             {@render timeSelectorButton(timeMin)}
         {/each}

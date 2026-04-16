@@ -40,8 +40,8 @@
                     queryables.forEach((it: Queryable) => {
                         switch (it.kind){
                             case "route":
-                                if (it.route_short_name === queryableName){
-                                    scheduleSearchController.searchString = it.route_short_name;
+                                if (it.short_name === queryableName){
+                                    scheduleSearchController.searchString = it.short_name;
                                     scheduleSearchController.selectedQueryable = it;
                                 }
                                 break;
@@ -95,7 +95,7 @@
         {#if actionController.currAction === "queryableSearch"}
             <div id="queryable-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
                 on:introend={() => { scheduleSearchController.dropdownShown = true; }}
-                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+                class="z-1 flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <QueryableSearchBar/>
                 <DateTimeContainer/>
                 <QueryableDropdown/>
@@ -106,7 +106,7 @@
         {:else if actionController.currAction === "tripSelection"}
             <div id="trip-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
                 on:introend={() => { tripSelectionController.dropdownShown = true; }}
-                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+                class="z-1 flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <TripDropdownItem trip={tripSelectionController.selectedTrip}/>
                 <TripDropdown/>
             </div>

@@ -21,7 +21,7 @@ export default class ScheduleSearchController {
 
             if (this._selectedQueryable?.kind === "stop" && this._selectedQueryable.name !== value) {
                 this.selectedQueryable = null;
-            } else if (this._selectedQueryable?.kind === "route" && this._selectedQueryable.route_short_name !== value) {
+            } else if (this._selectedQueryable?.kind === "route" && this._selectedQueryable.short_name !== value) {
                 this.selectedQueryable = null;
             }
 
@@ -49,7 +49,7 @@ export default class ScheduleSearchController {
                     if (it.kind === "stop"){
                         return (it as Stop).name.toLowerCase().includes(filter.toLowerCase());
                     } else if (it.kind === "route"){
-                        return (it as Route).route_short_name.toLowerCase().includes(filter.toLowerCase());
+                        return (it as Route).short_name.toLowerCase().includes(filter.toLowerCase());
                     }
                 });
                 resolve(filteredItems);
@@ -68,7 +68,7 @@ export default class ScheduleSearchController {
             } else {
                 switch (value.kind){
                     case "route":
-                        URLParamController.set(ScheduleSearchController.QUERYABLE_QP_KEY, value.route_short_name);
+                        URLParamController.set(ScheduleSearchController.QUERYABLE_QP_KEY, value.short_name);
                         break;
                     case "stop":
                         URLParamController.set(ScheduleSearchController.QUERYABLE_QP_KEY, value.name);

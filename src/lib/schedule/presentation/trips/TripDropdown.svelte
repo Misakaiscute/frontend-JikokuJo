@@ -31,7 +31,7 @@
 {#await tripSelectionController.tripRequestResult}
     {#if tripSelectionController.dropdownShown}
         <div id="trip-dropdown" transition:slide={{ duration: 200 }} class="flex-[1_0_auto] max-h-[60svh] w-full mt-1">
-            <div class="h-full w-full flex flex-col p-0.5 rounded-md bg-zinc-200">
+            <div class="h-full w-full flex flex-col gap-y-0.5 p-0.5 rounded-md bg-zinc-200">
                 {#each {length: 8} as _}
                     <TripDropdownGhostItem/>
                 {/each}
@@ -41,7 +41,7 @@
 {:then _}
     {#if tripSelectionController.dropdownShown}
         <div id="trip-dropdown" transition:slide={{ duration: 200 }} class="flex-[1_0_auto] max-h-[60svh] w-full mt-1">
-            <div class="h-full w-full flex flex-col p-0.5 rounded-md bg-zinc-200 overflow-y-auto">
+            <div class="h-full w-full flex flex-col gap-y-0.5 p-0.5 rounded-md bg-zinc-200 overflow-y-auto">
                 {#each tripSelectionController.trips as trip}
                     <DropdownItem
                         trip={trip}

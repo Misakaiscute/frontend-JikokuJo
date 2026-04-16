@@ -1,8 +1,8 @@
 ﻿import {beforeEach, describe, expect, it} from "vitest";
-import UserRepositoryMock from "../mock/userRepositoryMock.ts";
-import Component from "../../../src/lib/profile/presentation/Register.svelte";
+import UserRepositoryMock from "../../mock/userRepositoryMock.ts";
+import Component from "../../../../src/lib/profile/presentation/auth/Register.svelte";
 import {fireEvent, render, screen} from "@testing-library/svelte";
-import UserController from "../../../src/lib/profile/presentation/userController.svelte.ts";
+import UserController from "../../../../src/lib/profile/presentation/userController.svelte.ts";
 import {tick} from "svelte";
 
 describe("Register component", () => {
