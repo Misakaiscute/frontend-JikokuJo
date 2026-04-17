@@ -52,7 +52,7 @@
 <div in:slide={{ duration: 200, delay: 150 }} out:slide={{ duration: 100 }}
      class="flex-[0_0_auto] w-full flex items-center justify-center bg-zinc-200 rounded-b-sm"
 >
-    <div id="time-selectors" class="flex-[1_1_auto] h-auto max-h-[6.25rem] ml-0.5 my-0.5 flex flex-wrap gap-0.5 justify-start items-start overflow-y-scroll disable-scrollbars">
+    <div id="time-selectors" class="flex-[1_1_auto] h-auto max-h-25 ml-0.5 my-0.5 flex flex-wrap gap-0.5 justify-start items-start overflow-y-scroll disable-scrollbars">
         {#each availableTimeMins as timeMin}
             {@render timeSelectorButton(timeMin)}
         {/each}
