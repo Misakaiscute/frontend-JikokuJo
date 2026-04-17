@@ -19,7 +19,7 @@
     let isCurrectTripTracked: boolean = $derived.by(() => {
         const result: boolean = mapController.realtimeVehicle !== null
 
-        if (mapController.realtimeVehicle === null) lastKnownTrackRealtimeState = result;
+        if (tripSelectionController.selectedTrip !== null) lastKnownTrackRealtimeState = result;
         return lastKnownTrackRealtimeState;
     });
 
@@ -58,7 +58,7 @@
 {#snippet copyButton()}
     <div id="share-btn" role="button" tabindex="-1"
         class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
-             hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200"
+             hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
         onclick={onCopyLinkToClipboard} onkeydown={() => {}}
     >
         <svg xmlns="http://www.w3.org/2000/svg" class="flex-[0_0_75%] aspect-square" width="24" height="24" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@
     {#await userController.isLoggedIn then _}
         <div id="track-realtime-btn" role="button" tabindex="-1"
             class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
-                hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200"
+                hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
             onclick={onTrackInRealtimeBtnClick} onkeydown={() => {}}
         >
             {#if isCurrectTripTracked}
@@ -92,7 +92,9 @@
             {/if}
         </div>
     {:catch _}
-        <div id="track-realtime-btn" class="flex-[0_0_30px] flex justify-center items-center w-full bg-zinc-200 border-2 rounded-sm border-zinc-400">
+        <div id="track-realtime-btn" class="flex-[0_0_30px] flex justify-center items-center w-full
+            bg-zinc-200 border-2 rounded-sm border-zinc-400 pointer-events-auto"
+            >
             {@render trackingOff()}
         </div>
     {/await}
@@ -112,7 +114,7 @@
     {#await userController.isLoggedIn then _}
         <div id="favourite-btn" role="button" tabindex="-1"
             class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
-                 hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200"
+                 hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
             onclick={onFavouriteBtnClick} onkeydown={() => {}}
         >
             {#if isCurrentTripFavourite}
@@ -122,14 +124,16 @@
             {/if}
         </div>
     {:catch _}
-        <div id="favourite-btn" class="flex-[0_0_30px] flex justify-center items-center w-full bg-zinc-200 border-2 rounded-sm border-zinc-400">
+        <div id="favourite-btn" class="flex-[0_0_30px] flex justify-center items-center w-full
+            bg-zinc-200 border-2 rounded-sm border-zinc-400 pointer-events-auto">
             {@render favouriteOff()}
         </div>
     {/await}
 {/snippet}
 
 {#if tripSelectionController.selectedTrip !== null}
-    <div transition:fade={{ duration: 200 }} class="flex-[0_0_auto] w-full flex flex-col gap-y-0.5 justify-center items-center">
+    <div transition:fade={{ duration: 200 }}
+        class="flex-[0_0_auto] w-full flex flex-col gap-y-0.5 justify-center items-center pointer-events-none">
         {@render copyButton()}
         {@render realtimeVehicleButton()}
         {@render favouriteButton()}

@@ -36,7 +36,7 @@
 {#if scheduleSearchController.selectedQueryable !== null && scheduleSearchController.selectedQueryable.kind === "stop"}
     <div id="to-queryable-action" transition:fade={{ duration: 300 }} role="button" tabindex="-1" title="{scheduleSearchController.selectedQueryable.name}"
          class="flex-[0_1_auto] max-h-[40svh] w-full py-2 rounded-md border-2 flex flex-col items-center justify-center
-               bg-white border-zinc-200 transition-all duration-200 hover:border-zinc-800 hover:cursor-pointer"
+               bg-white border-zinc-200 transition-all duration-200 hover:border-zinc-800 hover:cursor-pointer pointer-events-auto"
          onclick={onQueryableNavClick} onkeydown={() => {}}
     >
         <p class="flex-[1_1_auto] w-full px-1 font-medium text-zinc-800 truncate [writing-mode:vertical-rl] rotate-180">
@@ -47,7 +47,7 @@
     <div id="to-queryable-action" transition:fade={{ duration: 300 }} role="button" tabindex="-1" title="{scheduleSearchController.selectedQueryable.short_name}"
         style="--route-color: {'#' + (scheduleSearchController.selectedQueryable.color ?? '000000')}"
         class="flex-[0_1_auto] max-h-[40svh] w-full py-2 rounded-md border-2 border-(--route-color) flex flex-col items-center justify-center
-              bg-white transition-all duration-200 hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)]"
+              bg-white transition-all duration-200 hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)] pointer-events-auto"
         onclick={onQueryableNavClick} onkeydown={() => {}}
     >
         <p class="flex-[1_1_auto] w-full px-1 font-medium text-zinc-800 truncate [writing-mode:vertical-rl] rotate-180">
@@ -59,7 +59,7 @@
     <div id="to-trip-action" transition:fade={{ duration: 300 }} role="button" tabindex="-1" title="{tripSelectionController.selectedTrip.headsign} - {route?.short_name}"
         style="--route-color: {'#' + (route?.color ?? '000000')}"
         class="flex-[0_1_auto] max-h-[40svh] w-full py-2 rounded-md border-2 border-(--route-color) flex flex-col items-center justify-center
-              bg-white transition-all duration-200 hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)]"
+              bg-white transition-all duration-200 hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)] pointer-events-auto"
         onclick={onTripNavClick} onkeydown={() => {}}
     >
         <div class="flex-[1_1_auto] w-full px-1 truncate font-medium [writing-mode:vertical-rl] rotate-180 flex">

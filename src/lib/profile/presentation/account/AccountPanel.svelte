@@ -97,12 +97,13 @@
                     {@render logout()}
                 </div>
             {:catch err}
-                <div id="favourites" class="flex-[1_1_auto] w-full flex flex-col items-start justify-start overflow-y-auto">
+                <div class="relative h-full w-full bg-zinc-900/80 flex flex-col items-center justify-center">
                     <div id="retry-btn" role="button" tabindex="0"
-                        class="flex-[0_0_10rem] flex justify-center items-center"
+                        class="h-16 flex justify-center items-center"
                         onclick={() => { userController.getUser(); }} onkeydown={() => {}}
                     >
-                        <p class="flex-[1_1_auto] h-full text-white">{err.message} Újrapróbálás?</p>
+                        <p class="flex-[1_1_0] text-white text-center">{err.message}</p>
+                        <p class="flex-[1_1_0] text-white text-center">Újrapróbálás?</p>
                     </div>
                 </div>
             {/await}

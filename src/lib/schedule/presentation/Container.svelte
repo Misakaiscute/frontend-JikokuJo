@@ -88,7 +88,7 @@
     );
 </script>
 <div class="flex w-full h-auto max-[600px]:p-1">
-    <nav class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 mr-1 pointer-events-auto">
+    <nav class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 mr-1 pointer-events-none">
         <ActionSelector/>
     </nav>
     <div class="min-w-72 w-[50svw] max-[600px] h-auto flex flex-col max-[600px]:flex-[1_0_auto] max-[600px]:min-w-60">
@@ -115,7 +115,7 @@
             </div>
         {/if}
     </div>
-    <div class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 ml-1 pointer-events-auto">
+    <div class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 ml-1 pointer-events-none">
         <TripActionButtons/>
     </div>
 </div>
