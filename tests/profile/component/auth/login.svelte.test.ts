@@ -8,8 +8,7 @@ import {tick} from "svelte";
 describe("Login component", () => {
     let container!: HTMLElement;
     let userController!: UserController;
-    const userRepository = new UserRepositoryMock();
-    userRepository.userLoggedIn = false;
+    const userRepository: UserRepositoryMock = new UserRepositoryMock();
 
     beforeEach(async () => {
         const context = new Map([[UserController.KEY, new UserController(userRepository)]]);

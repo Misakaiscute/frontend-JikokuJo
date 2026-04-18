@@ -9,7 +9,6 @@ describe("Register component", () => {
     let container!: HTMLElement;
     let userController!: UserController;
     const userRepository = new UserRepositoryMock();
-    userRepository.userLoggedIn = false;
 
     beforeEach(async () => {
         const context = new Map([[UserController.KEY, new UserController(userRepository)]]);

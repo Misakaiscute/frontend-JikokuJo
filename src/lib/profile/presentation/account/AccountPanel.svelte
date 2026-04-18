@@ -22,7 +22,7 @@
 </script>
 
 {#snippet accountDetails(user: User)}
-    <div class="flex-[0_0_auto] w-full py-1 px-4 flex gap-x-4 items-center justify-around bg-zinc-100">
+    <div id="account-details" class="flex-[0_0_auto] w-full py-1 px-4 flex gap-x-4 items-center justify-around bg-zinc-100">
         <div class="flex-[0_0_2.5rem] aspect-square rounded-full bg-zinc-200 flex items-center justify-center text-sm font-medium text-zinc-600 shrink-0">
             <p>{user.second_name[0] + user.first_name[0]}</p>
         </div>
