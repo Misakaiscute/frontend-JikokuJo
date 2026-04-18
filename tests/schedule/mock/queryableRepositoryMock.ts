@@ -12,8 +12,8 @@ export default class QueryableRepositoryMock implements QueryablesRepository {
             });
             this.queryables.push({
                 kind: "route",
-                route_id: i.toString(),
-                route_short_name: i.toString(),
+                id: i.toString(),
+                short_name: i.toString(),
                 color: Math.round(Math.random() * Math.pow(2, 16)).toString(16).toString(),
                 type: i % 8
             });

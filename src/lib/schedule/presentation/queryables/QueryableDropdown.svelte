@@ -8,7 +8,7 @@
 </script>
 {#if scheduleSearchController.filteredQueryables.length > 0 && scheduleSearchController.dropdownShown}
     <div id="queryable-dropdown" transition:slide={{ duration: 200 }} class="flex-[1_0_auto] max-h-[60svh] w-full mt-1">
-        <div class="h-full w-full flex flex-col p-0.5 rounded-md bg-zinc-200 overflow-y-auto">
+        <div class="h-full w-full flex flex-col gap-y-0.5 p-0.5 rounded-md bg-zinc-200 overflow-y-auto">
             {#each scheduleSearchController.filteredQueryables as queryable}
                 <QueryableQueryableDropdownItem {queryable}/>
             {/each}

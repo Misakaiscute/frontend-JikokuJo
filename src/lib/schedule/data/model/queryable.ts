@@ -6,10 +6,17 @@ export type Stop = {
 
 export type Route = {
     kind: "route",
-    route_id: string,
-    route_short_name: string,
+    id: string,
+    short_name: string,
     type: number,
     color: string | null,
 }
+
+export const getRouteDesignation: Map<number, string> = Object.freeze(new Map<number, string>([
+    [1, "busz"], [2, "villamos"],
+    [3, "metró"], [4, "troli"],
+    [5, "vonat"], [6, "hév"],
+    [7, "taxi"], [8, "egyéb"]
+]));
 
 export type Queryable = Stop | Route

@@ -63,7 +63,7 @@ export default class TripSelectionController {
             if (queryables !== null) {
                 const isFound: Queryable | null = queryables.find((it: Queryable) => {
                     if (it.kind === "route"){
-                        return it.route_id === routeId;
+                        return it.id === routeId;
                     }
                 }) ?? null;
                 if (isFound === null){

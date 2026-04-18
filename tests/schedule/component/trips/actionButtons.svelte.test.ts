@@ -10,7 +10,6 @@ import UserController from "../../../../src/lib/profile/presentation/userControl
 import type {Trip} from "../../../../src/lib/schedule/data/model/trip.ts";
 import MapController from "../../../../src/lib/map/presentation/mapController.svelte.ts";
 
-
 describe("Trip action buttons component", () => {
     let container!: HTMLElement;
     let tripSelectionController!: TripSelectionController;
@@ -40,10 +39,9 @@ describe("Trip action buttons component", () => {
         tripSelectionController.selectedTrip = trips[0];
         await tick();
 
-        const shareBtn: HTMLElement | null = container.querySelector("#share-btn");
-        expect(shareBtn).toBeInTheDocument();
-        const trackRealtimeBtn: HTMLElement | null = container.querySelector("#track-realtime-btn");
-        expect(trackRealtimeBtn).toBeInTheDocument();
+        expect(container.querySelector("#share-btn")).toBeInTheDocument();
+        expect(container.querySelector("#track-realtime-btn")).toBeInTheDocument();
+        expect(container.querySelector("#favourite-btn")).toBeInTheDocument();
     });
     it("should show tracking button as not clickable when user is not logged in", async () => {
         tripsRepository.mockGetTripsSuccess = true;
@@ -53,6 +51,17 @@ describe("Trip action buttons component", () => {
         await tick();
 
         const trackRealtimeBtn: HTMLElement | null = container.querySelector("#track-realtime-btn");
+        expect(trackRealtimeBtn).toBeInTheDocument();
+        expect(trackRealtimeBtn?.tagName.toLowerCase()).toBe("div");
+    });
+    it("should show favourite button as not clickable when user is not logged in", async () => {
+        tripsRepository.mockGetTripsSuccess = true;
+        const trips: Trip[] = await tripsRepository.getTrips({ kind: "stop", name: "Stop No. 1", ids: [] }, new Date(Date.now()));
+        tripSelectionController.selectedTrip = trips[0];
+        userController.isLoggedIn = Promise.reject(new Error("User is not logged in"));
+        await tick();
+
+        const trackRealtimeBtn: HTMLElement | null = container.querySelector("#favourite-btn");
         expect(trackRealtimeBtn).toBeInTheDocument();
         expect(trackRealtimeBtn?.tagName.toLowerCase()).toBe("div");
     });
@@ -68,9 +77,8 @@ describe("Trip action buttons component", () => {
         expect(trackRealtimeBtn?.role).toBe("button");
     });
     it("should not show buttons when trip is not selected", async () => {
-        const shareBtn: HTMLElement | null = container.querySelector("#share-btn");
-        expect(shareBtn).not.toBeInTheDocument();
-        const trackRealtimeBtn: HTMLElement | null = container.querySelector("#track-realtime-btn");
-        expect(trackRealtimeBtn).not.toBeInTheDocument();
+        expect(container.querySelector("#share-btn")).not.toBeInTheDocument();
+        expect(container.querySelector("#track-realtime-btn")).not.toBeInTheDocument();
+        expect(container.querySelector("#favourite-btn")).not.toBeInTheDocument();
     });
 });

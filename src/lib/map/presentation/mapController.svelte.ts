@@ -18,6 +18,7 @@ export default class MapController {
     private tripStops: CircleMarker[] = [];
 
     public realtimeVehicle: CircleMarker | null = $state(null);
+    private previousTrip: Trip | null = null;
 
     public isTripLoading: boolean = $state(false);
 
@@ -35,7 +36,7 @@ export default class MapController {
         }).addTo(this.map);
     }
 
-    public removeTrip = (trip: Trip) => {
+    public removeTrip = (trip: Trip | null) => {
         this.tripStops.forEach((it: CircleMarker) => it.removeFrom(this.map!!));
         this.tripStops = [];
         this.tripAfterStopPolyline?.removeFrom(this.map!!);
@@ -47,7 +48,9 @@ export default class MapController {
         this.tripBeforeStopPolylineShadow?.removeFrom(this.map!!);
         this.tripBeforeStopPolylineShadow = null;
 
-        this.unregisterListenerForVehiclePositionUpdate(trip);
+        if(trip !== null){
+            this.unregisterListenerForVehiclePositionUpdate(trip);
+        }
     }
 
     public displayTrip = (
@@ -57,7 +60,8 @@ export default class MapController {
         routeAssociated: Route,
         forQueryable: Queryable
     ): void => {
-        this.removeTrip(trip);
+        this.removeTrip(this.previousTrip);
+        this.previousTrip = trip;
 
         switch(forQueryable.kind){
             case "route":

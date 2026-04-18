@@ -18,22 +18,23 @@ export default class TripsRepositoryImpl implements TripsRepository {
             return this.stops.get(trip.id)!!.data!!;
         }
         try {
-            return await axios.get<RootResponse<GetStopsForTripObj>>(`/api/trip/${trip.id}/stops`)
-                .then((res) => {
-                    this.stops.set(trip.id, {
-                        kind: "fulfill",
-                        data: res.data.data.stops,
-                        errors: []
-                    });
-                    return this.stops.get(trip.id)!!.data!!;
-                }).catch((err: AxiosError<RootResponse<GetShapesForTripObj>>) => {
-                    this.stops.set(trip.id, {
-                        kind: "reject",
-                        data: null,
-                        errors: err.response?.data?.errors ?? ["Valami hiba történt."]
-                    });
-                    throw new Error(this.stops.get(trip.id)?.errors[0]);
-                })
+            return await axios.post<RootResponse<GetStopsForTripObj>>("/api/trip/stops", {
+                trip_id: trip.id
+            }).then((res) => {
+                this.stops.set(trip.id, {
+                    kind: "fulfill",
+                    data: res.data.data.stops,
+                    errors: []
+                });
+                return this.stops.get(trip.id)!!.data!!;
+            }).catch((err: AxiosError<RootResponse<GetShapesForTripObj>>) => {
+                this.stops.set(trip.id, {
+                    kind: "reject",
+                    data: null,
+                    errors: err.response?.data?.errors ?? ["Valami hiba történt."]
+                });
+                throw new Error(this.stops.get(trip.id)?.errors[0]);
+            });
         } catch {
             throw new Error("Valami hiba történt.");
         }
@@ -43,22 +44,23 @@ export default class TripsRepositoryImpl implements TripsRepository {
             return this.shapes.get(trip.shape_id)!!.data!!;
         }
         try {
-            return await axios.get<RootResponse<GetShapesForTripObj>>(`/api/trip/${trip.id}/shapes`)
-                .then((res) => {
-                    this.shapes.set(trip.shape_id, {
-                        kind: "fulfill",
-                        data: res.data.data.points,
-                        errors: []
-                    });
-                    return this.shapes.get(trip.shape_id)!!.data!!;
-                }).catch((err: AxiosError<RootResponse<GetShapesForTripObj>>) => {
-                    this.shapes.set(trip.shape_id, {
-                        kind: "reject",
-                        data: null,
-                        errors: err.response?.data?.errors ?? ["Valami hiba történt."]
-                    });
-                    throw new Error(this.shapes.get(trip.shape_id)!!.errors[0]);
-                })
+            return await axios.post<RootResponse<GetShapesForTripObj>>("/api/trip/shapes", {
+                trip_id: trip.id
+            }).then((res) => {
+                this.shapes.set(trip.shape_id, {
+                    kind: "fulfill",
+                    data: res.data.data.points,
+                    errors: []
+                });
+                return this.shapes.get(trip.shape_id)!!.data!!;
+            }).catch((err: AxiosError<RootResponse<GetShapesForTripObj>>) => {
+                this.shapes.set(trip.shape_id, {
+                    kind: "reject",
+                    data: null,
+                    errors: err.response?.data?.errors ?? ["Valami hiba történt."]
+                });
+                throw new Error(this.shapes.get(trip.shape_id)!!.errors[0]);
+            });
         } catch {
             throw new Error("Valami hiba történt.");
         }
@@ -75,7 +77,7 @@ export default class TripsRepositoryImpl implements TripsRepository {
                     time: timeFormatted
                 }).then((res) => {
                     return res.data.data.trips;
-                }).catch((err: AxiosError<RootResponse<GetTripsObj>>) => {
+                }).catch((err: AxiosError<RootResponse<any>>) => {
                     throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
                 });
             } catch {
@@ -83,12 +85,15 @@ export default class TripsRepositoryImpl implements TripsRepository {
             }
         } else {
             try {
-                return await axios.get(`/api/route/${selectedQueryable.route_id}/time/${dateFormatted}/${timeFormatted}`)
-                    .then((res) => {
-                        return res.data.data.trips;
-                    }).catch((err: AxiosError<RootResponse<GetTripsObj>>) => {
-                        throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
-                    });
+                return await axios.post("/api/route/trip", {
+                    route_id: selectedQueryable.id,
+                    date: dateFormatted,
+                    time: timeFormatted
+                }).then((res) => {
+                    return res.data.data.trips;
+                }).catch((err: AxiosError<RootResponse<any>>) => {
+                    throw new Error(err.response?.data?.errors[0] ?? "Valami hiba történt.");
+                });
             } catch {
                 throw new Error("Szerver nem elérhető.");
             }

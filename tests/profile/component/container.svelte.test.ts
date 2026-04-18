@@ -7,25 +7,25 @@ import {tick} from "svelte";
 
 describe("User container actions component", () => {
     let container!: HTMLElement;
+    let userController!: UserController;
 
-    const renderComponent = async (loggedIn: boolean) => {
+    beforeEach(async () => {
         const userRepository = new UserRepositoryMock();
-        userRepository.userLoggedIn = loggedIn;
         const context = new Map([[UserController.KEY, new UserController(userRepository)]]);
         ({ container } = render(Component, {
             context: context
         }));
+        userController = context.get(UserController.KEY) as UserController;
         await tick();
-    };
+    });
 
     it("should have an account button when user found", async () => {
-        await renderComponent(true);
-
         const accountBtn: HTMLElement | null = container.querySelector("#account-btn");
         expect(accountBtn).toBeInTheDocument();
     });
     it("should have login and register button when no user found", async () => {
-        await renderComponent(false);
+        userController.isLoggedIn = Promise.reject("User not logged in");
+        await tick();
 
         const loginButton: HTMLElement | null = container.querySelector("#login-btn");
         expect(loginButton).toBeInTheDocument();
@@ -33,7 +33,8 @@ describe("User container actions component", () => {
         expect(registerButton).toBeInTheDocument();
     });
     it("should open login form on login button click", async () => {
-        await renderComponent(false);
+        userController.isLoggedIn = Promise.reject("User not logged in");
+        await tick();
 
         const loginButton: HTMLElement | null = container.querySelector("#login-btn");
         loginButton?.click();
@@ -43,7 +44,8 @@ describe("User container actions component", () => {
         expect(loginPanelCloseBtn).toBeInTheDocument();
     });
     it("should open register form on register button click", async () => {
-        await renderComponent(false);
+        userController.isLoggedIn = Promise.reject("User not logged in");
+        await tick();
 
         const registerButton: HTMLElement | null = container.querySelector("#register-btn");
         registerButton?.click();

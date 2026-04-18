@@ -40,8 +40,8 @@
                     queryables.forEach((it: Queryable) => {
                         switch (it.kind){
                             case "route":
-                                if (it.route_short_name === queryableName){
-                                    scheduleSearchController.searchString = it.route_short_name;
+                                if (it.short_name === queryableName){
+                                    scheduleSearchController.searchString = it.short_name;
                                     scheduleSearchController.selectedQueryable = it;
                                 }
                                 break;
@@ -88,14 +88,14 @@
     );
 </script>
 <div class="flex w-full h-auto max-[600px]:p-1">
-    <nav class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 mr-1 pointer-events-auto">
+    <nav class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 mr-1 pointer-events-none">
         <ActionSelector/>
     </nav>
     <div class="min-w-72 w-[50svw] max-[600px] h-auto flex flex-col max-[600px]:flex-[1_0_auto] max-[600px]:min-w-60">
         {#if actionController.currAction === "queryableSearch"}
             <div id="queryable-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
                 on:introend={() => { scheduleSearchController.dropdownShown = true; }}
-                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+                class="z-1 flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <QueryableSearchBar/>
                 <DateTimeContainer/>
                 <QueryableDropdown/>
@@ -106,7 +106,7 @@
         {:else if actionController.currAction === "tripSelection"}
             <div id="trip-action" in:slide={{ duration: 200, delay: 250 }} out:slide={{ duration: 200 }}
                 on:introend={() => { tripSelectionController.dropdownShown = true; }}
-                class="z-[1] flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
+                class="z-1 flex-[0_0_auto] w-full p-1 flex flex-col justify-center rounded-md bg-white pointer-events-auto">
                 <TripDropdownItem trip={tripSelectionController.selectedTrip}/>
                 <TripDropdown/>
             </div>
@@ -115,7 +115,7 @@
             </div>
         {/if}
     </div>
-    <div class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 ml-1 pointer-events-auto">
+    <div class="flex-[0_0_30px] h-auto flex flex-col gap-y-0.5 ml-1 pointer-events-none">
         <TripActionButtons/>
     </div>
 </div>
