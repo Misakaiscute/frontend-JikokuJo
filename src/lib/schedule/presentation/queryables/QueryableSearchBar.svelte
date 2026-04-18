@@ -12,7 +12,9 @@
 
     const onSearch = () => {
         scheduleSearchController.dropdownShown = false;
+        scheduleSearchController.dateTimePickerDropdown = null;
         actionController.currAction = 'tripSelection';
+        tripSelectionController.dropdownShown = false;
         tripSelectionController.searchTrips(scheduleSearchController.selectedQueryable!!, scheduleSearchController.date);
     }
     const onClear = () => {
@@ -52,7 +54,7 @@
             </button>
         {/if}
     </div>
-{:catch err}
+{:catch err: Error}
     <div class="group flex h-10 w-full items-center rounded-md border-2 border-zinc-200 bg-white focus-within:border-zinc-800 transition-colors duration-300">
         <p id="error-msg" class="flex-[1_0_auto] bg-transparent py-4 pl-2 text-sm text-red-800 outline-none">
             {err.message}

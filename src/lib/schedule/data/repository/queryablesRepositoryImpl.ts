@@ -13,34 +13,33 @@ export default class QueryablesRepositoryImpl implements QueryablesRepository {
             return this.queryables.data!!;
         }
         try {
-            return await axios.get<RootResponse<GetQueryablesObj>>("/api/queryables")
-                .then((res) => {
-                    const fetchedQueryables: Queryable[] = [];
-                    fetchedQueryables.push(...(res.data.data.stops).map((it: Stop): Stop => ({
-                        ...it,
-                        kind: "stop",
-                    })));
-                    fetchedQueryables.push(...res.data.data.routes.map((it: Route): Route => ({
-                        ...it,
-                        kind: "route"
-                    })));
+            return await axios.get<RootResponse<GetQueryablesObj>>("/api/queryables").then((res) => {
+                const fetchedQueryables: Queryable[] = [];
+                fetchedQueryables.push(...(res.data.data.stops).map((it: Stop): Stop => ({
+                    ...it,
+                    kind: "stop",
+                })));
+                fetchedQueryables.push(...res.data.data.routes.map((it: Route): Route => ({
+                    ...it,
+                    kind: "route"
+                })));
 
-                    this.queryables = {
-                        kind: "fulfill",
-                        data: fetchedQueryables,
-                        errors: []
-                    }
-                    return this.queryables.data!!;
-                }).catch((err: AxiosError<RootResponse<GetQueryablesObj>>) => {
-                    this.queryables = {
-                        kind: "reject",
-                        data: null,
-                        errors: err.response?.data?.errors ?? ["Valami hiba történt."]
-                    }
-                    throw new Error(this.queryables.errors[0]);
-                });
+                this.queryables = {
+                    kind: "fulfill",
+                    data: fetchedQueryables,
+                    errors: []
+                }
+                return this.queryables.data!!;
+            }).catch((err: AxiosError<RootResponse<GetQueryablesObj>>) => {
+                this.queryables = {
+                    kind: "reject",
+                    data: null,
+                    errors: err.response?.data?.errors ?? ["Valami hiba történt."]
+                }
+                throw new Error(this.queryables.errors[0]);
+            });
         } catch (e) {
-            throw new Error("Szerver nem elérhető.")
+            throw new Error("Szerver nem elérhető.");
         }
     }
 }

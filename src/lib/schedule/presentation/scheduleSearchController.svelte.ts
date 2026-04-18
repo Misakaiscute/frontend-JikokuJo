@@ -88,7 +88,7 @@ export default class ScheduleSearchController {
         this.queryablesFetchRequestResult = new Promise(async (resolve, reject) => {
             await this.queryablesRepository.getQueryables()
                 .then(() => resolve())
-                .catch((err: Error) => reject(err.message));
+                .catch((err: Error) => reject(new Error(err.message)));
         });
     }
 
