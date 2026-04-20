@@ -34,7 +34,7 @@
 
 <BlackScreenOverlay onclick={onPopupClose}>
     <div role="dialog" tabindex="-1"
-        class="h-[clamp(20rem,80svh,36rem)] w-[clamp(12rem,40svw,24rem)] rounded-md bg-white pointer-events-auto"
+        class="h-[clamp(20rem,80svh,36rem)] w-[clamp(16rem,40svw,24rem)] rounded-md bg-white pointer-events-auto"
         onclick={(e) => e.stopPropagation()}
         onmousedown={(e) => e.stopPropagation()}
         onkeydown={(e) => e.stopPropagation()}
