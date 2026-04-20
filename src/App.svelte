@@ -9,8 +9,12 @@
     import UserController from "./lib/profile/presentation/userController.svelte.ts";
     import UserRepositoryImpl from "./lib/profile/data/repository/userRepositoryImpl.ts";
 
-    MapController.setMapControllerContext();
+    const mapController: MapController = MapController.setMapControllerContext();
     UserController.setUserControllerContext(new UserRepositoryImpl());
+
+    window.addEventListener('beforeunload', () => {
+        mapController.unregisterListenerForVehiclePositionUpdate();
+    });
 </script>
 <main id="main" class="h-svh w-svw relative">
     <Map/>

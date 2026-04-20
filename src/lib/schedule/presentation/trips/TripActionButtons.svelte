@@ -45,7 +45,7 @@
                 });
             });
         } else {
-            mapController.unregisterListenerForVehiclePositionUpdate(tripSelectionController.selectedTrip!!);
+            mapController.unregisterListenerForVehiclePositionUpdate();
         }
     }
     const onFavouriteBtnClick = (): void => {
