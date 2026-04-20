@@ -62,9 +62,9 @@
               bg-white transition-all duration-200 hover:cursor-pointer hover:bg-[color-mix(in_srgb,var(--route-color)_15%,white)] pointer-events-auto"
         onclick={onTripNavClick} onkeydown={() => {}}
     >
-        <div class="flex-[1_1_auto] w-full px-1 truncate font-medium [writing-mode:vertical-rl] rotate-180 flex">
-            <p class="text-zinc-800 p-0 pb-1.5  ">{tripSelectionController.selectedTrip.headsign} -</p>
-            <p class="text-(--route-color) p-0">{' ' + route?.short_name}</p>
-        </div>
+        <p class="flex-[1_1_auto] w-full px-1 font-medium text-zinc-800 truncate [writing-mode:vertical-rl] rotate-180">
+            <span class="text-zinc-800">{tripSelectionController.selectedTrip.headsign} - </span>
+            <span class="text-(--route-color)">{route?.short_name}</span>
+        </p>
     </div>
 {/if}

@@ -24,12 +24,12 @@
 
 <div id="favourite-item" class="flex-[1_1_auto] h-7 pl-1 flex">
     <div class="w-full h-full flex justify-center items-center truncate">
-        <div style="--route-color: {'#' + (favourite.route.color ?? '000000')}"
-            class="flex-[1_1_auto] flex"
+        <p style="--route-color: {'#' + (favourite.route.color ?? '000000')}"
+            class="flex-[1_1_auto] flex font-medium truncate"
         >
-            <p class="font-medium truncate text-(--route-color) pr-0.5">{favourite.route.short_name}</p>
-            <p class="font-medium truncate text-zinc-800 pl-0.5"> - {getRouteDesignation.get(favourite.route.type)}</p>
-        </div>
+            <span class="text-(--route-color)">{favourite.route.short_name} - </span>
+            <span class="text-zinc-800">{getRouteDesignation.get(favourite.route.type)}</span>
+        </p>
     </div>
     <div class="flex-[0_0_auto] h-full flex justify-center items-center truncate">
         <p class="flex-[0_0_auto] px-2 font-medium text-zinc-600 max-[800px]:text-base">

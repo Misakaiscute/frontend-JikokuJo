@@ -16,7 +16,7 @@
     });
     
     let lastKnownTrackRealtimeState: boolean = false;
-    let isCurrectTripTracked: boolean = $derived.by(() => {
+    let isCurrentTripTracked: boolean = $derived.by(() => {
         const result: boolean = mapController.realtimeVehicle !== null
 
         if (tripSelectionController.selectedTrip !== null) lastKnownTrackRealtimeState = result;
@@ -56,7 +56,7 @@
 </script>
 
 {#snippet copyButton()}
-    <div id="share-btn" role="button" tabindex="-1"
+    <div id="share-btn" role="button" tabindex="-1" title="Másolás vágólapra"
         class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
              hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
         onclick={onCopyLinkToClipboard} onkeydown={() => {}}
@@ -81,11 +81,12 @@
 
     {#await userController.isLoggedIn then _}
         <div id="track-realtime-btn" role="button" tabindex="-1"
+            title="{isCurrentTripTracked ? 'Valós idejű követés befejezése' : 'Valós idejű követés elkezdése'}"
             class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
                 hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
             onclick={onTrackInRealtimeBtnClick} onkeydown={() => {}}
         >
-            {#if isCurrectTripTracked}
+            {#if isCurrentTripTracked}
                 {@render trackingOn()}
             {:else}
                 {@render trackingOff()}
@@ -113,6 +114,7 @@
 
     {#await userController.isLoggedIn then _}
         <div id="favourite-btn" role="button" tabindex="-1"
+            title="{isCurrentTripFavourite ? 'Eltávolítás a kedvencekből' : 'Hozzáadás a kedvencekhez'}"
             class="flex-[0_0_30px] flex justify-center items-center w-full bg-white border-2 rounded-sm border-zinc-200
                  hover:border-zinc-800 hover:cursor-pointer transition-colors duration-200 pointer-events-auto"
             onclick={onFavouriteBtnClick} onkeydown={() => {}}
