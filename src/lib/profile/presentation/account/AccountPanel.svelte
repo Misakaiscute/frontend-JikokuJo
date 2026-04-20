@@ -99,7 +99,7 @@
             {:catch err}
                 <div class="relative h-full w-full bg-zinc-900/80 flex flex-col items-center justify-center">
                     <div id="retry-btn" role="button" tabindex="0"
-                        class="h-16 flex justify-center items-center"
+                        class="h-16 flex flex-col justify-center items-center hover:cursor-pointer"
                         onclick={() => { userController.getUser(); }} onkeydown={() => {}}
                     >
                         <p class="flex-[1_1_0] text-white text-center">{err.message}</p>

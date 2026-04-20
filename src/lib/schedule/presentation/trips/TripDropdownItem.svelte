@@ -30,8 +30,9 @@
                 </p>
             </div>
             <div class="w-full min-w-0 h-full col-[1/4] row-[2/2] flex justify-center items-center truncate">
-                <p class="w-full min-w-0 font-medium text-(--route-color) text-xs truncate">
-                    {routeAssociated?.short_name} - {getRouteDesignation.get(routeAssociated?.type ?? 8)}
+                <p class="w-full min-w-0 font-medium text-xs truncate">
+                    <span class="text-zinc-800">{routeAssociated?.short_name} - </span>
+                    <span class="text-(--route-color)">{getRouteDesignation.get(routeAssociated?.type ?? 8)}</span>
                 </p>
             </div>
             <div class="w-full min-w-0 h-full py-0.5 col-[4/6] row-span-full flex justify-center items-center truncate">
