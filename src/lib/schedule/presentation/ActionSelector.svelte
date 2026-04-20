@@ -14,7 +14,7 @@
     const onQueryableNavClick = (): void => {
         actionController.currAction = "queryableSearch";
         scheduleSearchController.dropdownShown = true;
-        mapController.removeTrip(tripSelectionController.selectedTrip!!);
+        mapController.removeTrip();
         tripSelectionController.selectedTrip = null;
     }
     const onTripNavClick = (): void => {
