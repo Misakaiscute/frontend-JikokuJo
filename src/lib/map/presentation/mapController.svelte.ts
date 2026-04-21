@@ -97,23 +97,23 @@ export default class MapController {
             }
         }
         this.tripBeforeStopPolylineShadow = Leaflet.polyline(beforeSwitchingPointPolylinePoints, {
-            color: '#3d3d3d',
+            color: '#000000',
             weight: 10,
-            opacity: 0.9,
+            opacity: 0.5,
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);
         this.tripBeforeStopPolyline = Leaflet.polyline(beforeSwitchingPointPolylinePoints, {
-            color: `#5c5c5c`,
+            color: `#${routeAssociated.color}`,
             weight: 8,
-            opacity: 1,
+            opacity: 0.5,
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);
         this.tripAfterStopPolylineShadow = Leaflet.polyline(afterSwitchingPointPolylinePoints, {
             color: '#ffffff',
             weight: 10,
-            opacity: 0.9,
+            opacity: 1,
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);
@@ -144,10 +144,11 @@ export default class MapController {
             } else {
                 circle = Leaflet.circleMarker([it.location.lat, it.location.lon], {
                     radius: 7,
-                    color: '#3d3d3d',
+                    color: '#000000',
+                    opacity: 0.5,
                     weight: 3,
-                    fillColor: '#5c5c5c',
-                    fillOpacity: 1,
+                    fillColor: `#${routeAssociated.color}`,
+                    fillOpacity: 0.5,
                 });
             }
             this.tripStops.push(circle);
@@ -166,7 +167,7 @@ export default class MapController {
         this.tripAfterStopPolylineShadow = Leaflet.polyline(route, {
             color: '#ffffff',
             weight: 10,
-            opacity: 0.9,
+            opacity: 1,
             lineCap: 'round',
             lineJoin: 'round'
         }).addTo(this.map!!);

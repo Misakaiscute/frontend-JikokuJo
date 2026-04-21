@@ -25,9 +25,9 @@
 <div id="favourite-item" class="flex-[1_1_auto] h-7 pl-1 flex">
     <div class="w-full h-full flex justify-center items-center truncate">
         <p style="--route-color: {'#' + (favourite.route.color ?? '000000')}"
-            class="flex-[1_1_auto] flex font-medium truncate"
+            class="flex-[1_1_auto] min-w-0 flex font-medium truncate"
         >
-            <span class="text-(--route-color)">{favourite.route.short_name} - </span>
+            <span class="text-(--route-color)">{favourite.route.short_name} -&nbsp;</span>
             <span class="text-zinc-800">{getRouteDesignation.get(favourite.route.type)}</span>
         </p>
     </div>
