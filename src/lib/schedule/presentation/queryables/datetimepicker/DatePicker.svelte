@@ -26,6 +26,13 @@
         });
 
         if (sentinel) intersectionObserver.observe(sentinel);
+
+        (dayCardsContainer as HTMLElement).addEventListener("wheel", (e: WheelEvent) => {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                dayCardsContainer.scrollLeft += e.deltaY;  // Scroll horizontally
+            }
+        });
     });
     onDestroy(() => intersectionObserver?.disconnect());
 
