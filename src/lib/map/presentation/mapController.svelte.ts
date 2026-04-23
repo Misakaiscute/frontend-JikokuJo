@@ -207,6 +207,10 @@ export default class MapController {
         });
     }
     public registerListenerForVehiclePositionUpdate = (trip: Trip) => {
+        if (!window.Echo) {
+            console.error("Echo not initialized yet");
+            return;
+        }
         window.Echo.join(`trip.${trip.id}`)
             .listen(".vehicle.position-updated", (data: VehiclePositionUpdate) => {
                 if (this.realtimeVehicle === null){
