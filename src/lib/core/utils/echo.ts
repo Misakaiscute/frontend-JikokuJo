@@ -27,52 +27,55 @@ function getCookie(name: string) {
 
 async function initEcho() {
     await axios.get("/sanctum/csrf-cookie");
-
     window.Echo = new Echo({
         broadcaster: "reverb",
         key: import.meta.env.VITE_REVERB_KEY,
         wsHost: import.meta.env.VITE_REVERB_HOST,
-        wsPort: import.meta.env.VITE_REVERB_PORT,
+        wsPort: Number(import.meta.env.VITE_REVERB_PORT),
         enabledTransports: ["ws"],
-        forceTLS: false,
+        forceTLS: import.meta.env.VITE_REVERB_PROTOCOL === "https",
+
+        activityTimeout: 120000,
+        pongTimeout: 30000,
+        unavailableTimeout: 10000,
+
         authorizer: (channel) => {
             return {
                 authorize: (socketId, callback) => {
                     const token = getCookie("XSRF-TOKEN");
-
                     const body = new URLSearchParams({
                         socket_id: socketId,
                         channel_name: channel.name,
                     });
 
-                    console.log("CUSTOM AUTHORIZER HIT", {
-                        socketId,
-                        channel: channel.name,
-                    });
-
-                    axios.post(
-                        "/api/broadcasting/auth-debug",
-                        body,
-                        {
-                            withCredentials: true,
-                            headers: {
-                                Accept: "application/json",
-                                "X-Requested-With": "XMLHttpRequest",
-                                "X-XSRF-TOKEN": token,
-                                "Content-Type": "application/x-www-form-urlencoded",
-                            },
-                        }
-                    ).then((response) => {
-                        console.log("CUSTOM AUTHORIZER OK", response.status, response.data);
+                    axios.post("/api/broadcasting/auth", body, {
+                        withCredentials: true,
+                        headers: {
+                            Accept: "application/json",
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-XSRF-TOKEN": token,
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                    }).then((response) => {
                         callback(null, response.data);
                     }).catch((error) => {
-                        console.log("CUSTOM AUTHORIZER ERROR", error?.response?.status, error?.response?.data, error);
                         callback(error, null);
                     });
                 }
             };
-        }
+        },
     });
+    const pusher = window.Echo?.connector?.pusher;
+
+    if (pusher) {
+        pusher.connection.bind("state_change", (states: { previous: string; current: string }) => {
+            console.log("WS state:", states.previous, "->", states.current);
+        });
+
+        pusher.connection.bind("error", (err: unknown) => {
+            console.error("WS error:", err);
+        });
+    }
 }
 
 initEcho();
