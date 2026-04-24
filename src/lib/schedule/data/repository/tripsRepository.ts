@@ -8,5 +8,4 @@ export default interface TripsRepository{
     getStops(trip: Trip): Promise<StopDetailed[]>;
     getShapes(trip: Trip): Promise<RoutePathPoint[]>;
     getTrips(selectedQueryable: Queryable, dateTime: Date): Promise<Trip[]>;
-    openBroadcast(forTrip: Trip): Promise<void>;
 }

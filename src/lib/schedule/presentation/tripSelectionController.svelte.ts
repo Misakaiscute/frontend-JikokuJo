@@ -99,18 +99,6 @@ export default class TripSelectionController {
         }
     }
 
-    public openBroadcasting = async (): Promise<void> => {
-        return new Promise(async (resolve, reject) => {
-            if (this.selectedTrip === null) {
-                reject(new Error("Websocket connection couldn't be opened. Select a trip first."));
-            } else {
-                await this.tripsRepository.openBroadcast(this.selectedTrip!!)
-                    .then(() => resolve())
-                    .catch((err: Error) => reject(new Error(err.message)));
-            }
-        });
-    }
-
     public static readonly DATETIME_QP_KEY: string = "at";
     public static readonly TRIP_QP_KEY: string = "trip";
 

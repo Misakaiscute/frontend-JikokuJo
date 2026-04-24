@@ -59,7 +59,4 @@ export default class TripsRepositoryMock implements TripsRepository {
             }
         });
     }
-    openBroadcast(forTrip: Trip): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
 }

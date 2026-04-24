@@ -1,4 +1,4 @@
-﻿import Leaflet, {CircleMarker, type LatLngExpression, type LatLngTuple, Polyline} from "leaflet";
+﻿﻿import Leaflet, {CircleMarker, type LatLngExpression, type LatLngTuple, Polyline} from "leaflet";
 import type {StopDetailed} from "../../schedule/data/model/stopDetailed.ts";
 import type {Location, RoutePathPoint} from "../../schedule/data/model/location.ts";
 import type {Queryable, Route} from "../../schedule/data/model/queryable.ts";
@@ -21,6 +21,10 @@ export default class MapController {
     private previousTrip: Trip | null = null;
 
     public isTripLoading: boolean = $state(false);
+
+    private lastRealtimeMessageAt = 0;
+    private realtimeWatchdog: number | null = null;
+    private RETRY_TIME_MILLIS: number = 9000
 
     public bindMap(mapHolderId: HTMLDivElement) {
         this.map = Leaflet.map(mapHolderId, {
@@ -207,33 +211,70 @@ export default class MapController {
         });
     }
     public registerListenerForVehiclePositionUpdate = (trip: Trip) => {
-        window.Echo.join(`trip.${trip.id}`)
-            .listen(".vehicle.position-updated", (data: VehiclePositionUpdate) => {
-                if (this.realtimeVehicle === null){
-                    this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
-                        radius: 9,
-                        color: '#0e0e0e',
-                        weight: 4,
-                        fillColor: '#202020',
-                        fillOpacity: 1,
-                    }).addTo(this.map!!);
-                } else {
-                    this.realtimeVehicle.removeFrom(this.map!!);
-                    this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
-                        radius: 9,
-                        color: '#0e0e0e',
-                        weight: 4,
-                        fillColor: '#202020',
-                        fillOpacity: 1,
-                    }).addTo(this.map!!);
-                }
-            });
+        if (!window.Echo) {
+            console.error("Echo not initialized yet");
+            return;
+        }
+
+        const channelName = `trip.${trip.id}`;
+
+        const subscribe = () => {
+            window.Echo.leave(channelName);
+
+            window.Echo.join(channelName)
+                .listen(".vehicle.position-updated", (data: VehiclePositionUpdate) => {
+                    this.lastRealtimeMessageAt = Date.now();
+
+                    if (this.realtimeVehicle === null){
+                        this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
+                            radius: 9,
+                            color: '#0e0e0e',
+                            weight: 4,
+                            fillColor: '#202020',
+                            fillOpacity: 1,
+                        }).addTo(this.map!!);
+                    } else {
+                        this.realtimeVehicle.removeFrom(this.map!!);
+                        this.realtimeVehicle = Leaflet.circleMarker([data.lat, data.lon], {
+                            radius: 9,
+                            color: '#0e0e0e',
+                            weight: 4,
+                            fillColor: '#202020',
+                            fillOpacity: 1,
+                        }).addTo(this.map!!);
+                    }
+                });
+        };
+
+        this.lastRealtimeMessageAt = Date.now();
+        subscribe();
+
+        if (this.realtimeWatchdog !== null) {
+            clearInterval(this.realtimeWatchdog);
+        }
+
+        this.realtimeWatchdog = window.setInterval(() => {
+            const silenceMs = Date.now() - this.lastRealtimeMessageAt;
+
+            if (silenceMs > this.RETRY_TIME_MILLIS) {
+                console.warn(`No realtime update for ${silenceMs}ms, resubscribing to ${channelName}`);
+                this.lastRealtimeMessageAt = Date.now();
+                subscribe();
+            }
+        }, 10000);
     }
     public unregisterListenerForVehiclePositionUpdate = () => {
         if (this.previousTrip !== null){
             window.Echo.leave(`trip.${this.previousTrip.id}`);
             this.realtimeVehicle?.removeFrom(this.map!!);
         }
+
+        if (this.realtimeWatchdog !== null) {
+            clearInterval(this.realtimeWatchdog);
+            this.realtimeWatchdog = null;
+        }
+
+        this.lastRealtimeMessageAt = 0;
         this.realtimeVehicle = null;
     }
 
