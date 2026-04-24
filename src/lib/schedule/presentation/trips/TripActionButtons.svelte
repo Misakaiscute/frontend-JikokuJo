@@ -40,9 +40,7 @@
     const onTrackInRealtimeBtnClick = (): void => {
         if (mapController.realtimeVehicle === null){
             userController.isLoggedIn.then(async () => {
-                await tripSelectionController.openBroadcasting().then(() => {
-                    mapController.registerListenerForVehiclePositionUpdate(tripSelectionController.selectedTrip!!);
-                });
+                mapController.registerListenerForVehiclePositionUpdate(tripSelectionController.selectedTrip!!);
             });
         } else {
             mapController.unregisterListenerForVehiclePositionUpdate();

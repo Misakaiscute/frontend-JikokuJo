@@ -24,6 +24,7 @@ export default class MapController {
 
     private lastRealtimeMessageAt = 0;
     private realtimeWatchdog: number | null = null;
+    private RETRY_TIME_MILLIS: number = 9000
 
     public bindMap(mapHolderId: HTMLDivElement) {
         this.map = Leaflet.map(mapHolderId, {
@@ -255,7 +256,7 @@ export default class MapController {
         this.realtimeWatchdog = window.setInterval(() => {
             const silenceMs = Date.now() - this.lastRealtimeMessageAt;
 
-            if (silenceMs > 30000) {
+            if (silenceMs > this.RETRY_TIME_MILLIS) {
                 console.warn(`No realtime update for ${silenceMs}ms, resubscribing to ${channelName}`);
                 this.lastRealtimeMessageAt = Date.now();
                 subscribe();
