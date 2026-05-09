@@ -6,8 +6,10 @@
     import BlackScreenOverlay from "../../../core/presentation/BlackScreenOverlay.svelte";
     import DialogHeader from "../DialogHeader.svelte";
     import FavouriteItem from "./FavouriteItem.svelte";
+    import MapController from "../../../map/presentation/mapController.svelte.ts";
 
     const userController: UserController = UserController.getUserControllerContext();
+    const mapController: MapController = MapController.getMapControllerContext();
 
     onMount(() => {
         userController.getFavourites();
@@ -17,6 +19,7 @@
     const onPopupClose = () => { userController.popupShown = null; }
     const onLogoutBtnClick = async () => {
         userController.attemptLogout(); 
+        mapController.unregisterListenerForVehiclePositionUpdate();
         await userController.isLoggedIn.catch(() => {});
     }
 </script>
