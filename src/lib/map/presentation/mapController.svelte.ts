@@ -155,6 +155,7 @@ export default class MapController {
                     fillOpacity: 0.5,
                 });
             }
+            circle.bindPopup(`<p id="stop-popup" class="text-center">${it.name}</p>`);
             this.tripStops.push(circle);
             circle.addTo(this.map!!);
         });
@@ -192,6 +193,7 @@ export default class MapController {
                 fillColor: '#ffffff',
                 fillOpacity: 1,
             });
+            circle.bindPopup(`<p id="stop-popup" class="text-center">${it.name}</p>`);
             this.tripStops.push(circle);
             circle.addTo(this.map!!);
         });
