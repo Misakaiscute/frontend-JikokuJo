@@ -72,7 +72,7 @@ export default class UserRepositoryImpl implements UserRepository {
             throw new Error(err.message);
         });
         return await axios.post<RootResponse<ToggleFavouriteObj>>("/api/routes/favourite/toggle", {
-            time: atMins,
+            time: atMins.toString(),
             route_id: routeId
         }).then((res) => {
             return res.data.data;
